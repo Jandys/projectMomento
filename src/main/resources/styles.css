@@ -1,0 +1,10 @@
+.label{
+    -fx-font-family: sans-serif;
+    -fx-font-size: 30px;
+    -fx-text-alignment: right;
+}
+.error{
+    -fx-text-fill: RED;
+    -fx-font-size: 16px;
+    -fx-font-family: sans-serif;
+}

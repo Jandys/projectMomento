@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<Pane fx:id="borderPane" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.261" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.momento.controllers.ControllerLogin" stylesheets="styles.css">
+   <children>
+       <HBox>
+       <VBox fillWidth="true">
+
+               <Label textAlignment="CENTER" text="Momento Login" style="-fx-font-size: 16" alignment="CENTER"></Label>
+
+
+          <VBox.margin>
+              <Insets>
+                  <left>20</left>
+              </Insets>
+          </VBox.margin>
+          <VBox>
+              <Label text="Login Name">
+              </Label>
+              <TextField fx:id="loginField" promptText="login">
+
+              </TextField>
+          </VBox>
+          <VBox>
+              <Label text="Password">
+
+              </Label>
+              <PasswordField fx:id="passField" promptText="******">
+
+              </PasswordField>
+          </VBox>
+           <HBox>
+               <Button text="Přihlásit" onMouseClicked="#tryLogin"/>
+               <Button text="Registrovat" onMouseClicked="#tryRegister"/>
+           </HBox>
+           <Label fx:id="errorLogin" styleClass="error">
+
+           </Label>
+      </VBox>
+       </HBox>
+   </children>
+</Pane>

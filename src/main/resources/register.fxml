@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="cz.momento.controllers.ControllerRegister"
+            prefHeight="400.0" prefWidth="600.0"
+            stylesheets="styles.css">
+
+    <VBox spacing="5" fx:id="registerVBox">
+    <Label textAlignment="CENTER" text="Momento Register" style="-fx-font-size: 16" alignment="CENTER"></Label>
+        <HBox spacing="10">
+            <VBox spacing="10">
+                <Label text="Login Name"/>
+                <TextField fx:id="loginField" promptText="login" onKeyPressed="#updateKeyPressed"/>
+
+                <Label text="Password"/>
+                <PasswordField fx:id="passField1" promptText="password" onKeyPressed="#updateKeyPressed"/>
+
+                <Label text="Password again"/>
+                <PasswordField fx:id="passField2" promptText="password again" onKeyPressed="#updateKeyPressed"/>
+            </VBox>
+            <VBox spacing="10">
+                <Label text="Firstname"/>
+                <TextField fx:id="nameField" promptText="firstname" onKeyPressed="#updateKeyPressed"/>
+
+                <Label text="Surname"/>
+                <TextField fx:id="surnameField" promptText="surname" onKeyPressed="#updateKeyPressed" />
+
+            </VBox>
+        </HBox>
+        <Button prefWidth="375" fx:id="registerButton" text="Registrovat" onMouseClicked="#tryProcessRegister"> </Button>
+        <Label fx:id="errorRegister" styleClass="error"/>
+    </VBox>
+</AnchorPane>
