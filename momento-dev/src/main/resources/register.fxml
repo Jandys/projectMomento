@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="cz.momento.controllers.ControllerRegister"
+            prefHeight="400.0" prefWidth="400.0"
+            stylesheets="styles.css" styleClass="gradientMMNT">
+    <top>
+    <Label textAlignment="CENTER" text="Momento Register" prefWidth="400.0" styleClass="heading1" alignment="CENTER"></Label>
+    </top>
+
+    <left>
+        <Pane prefWidth="50.0"></Pane>
+    </left>
+    <right>
+        <Pane prefWidth="50.0"></Pane>
+    </right>
+
+
+    <center>
+
+
+    <VBox spacing="5" fx:id="registerVBox" styleClass="padding_top_30">
+        <HBox spacing="10">
+            <VBox>
+                <Label text="Login Name" styleClass="heading2"/>
+                <TextField fx:id="loginField" promptText="login" onKeyPressed="#updateKeyPressed"/>
+
+                <Label text="Password" styleClass="heading2" style="-fx-padding: 20 0 0 0"/>
+                <PasswordField fx:id="passField1" promptText="password" onKeyPressed="#updateKeyPressed"/>
+
+                <Label text="Password again" styleClass="heading2" style="-fx-padding: 20 0 0 0"/>
+                <PasswordField fx:id="passField2" promptText="password again" onKeyPressed="#updateKeyPressed"/>
+            </VBox>
+            <VBox>
+                <Label text="Firstname" styleClass="heading2"/>
+                <TextField fx:id="nameField" promptText="firstname" onKeyPressed="#updateKeyPressed"/>
+
+                <Label text="Surname" styleClass="heading2" style="-fx-padding: 20 0 0 0"/>
+                <TextField fx:id="surnameField" promptText="surname" onKeyPressed="#updateKeyPressed" />
+
+            </VBox>
+        </HBox>
+        <Button prefWidth="375" fx:id="registerButton" text="Registrovat" onMouseClicked="#tryProcessRegister"> </Button>
+        <Label fx:id="errorRegister" styleClass="error" wrapText="true" textAlignment="LEFT"/>
+    </VBox>
+    </center>
+
+
+</BorderPane>
