@@ -3,42 +3,57 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<Pane fx:id="borderPane" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.261" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.momento.controllers.ControllerLogin" stylesheets="styles.css">
-   <children>
+<BorderPane styleClass="gradientMMNT" fx:id="borderPane" prefHeight="350.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.261" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.momento.controllers.ControllerLogin" stylesheets="styles.css">
+
+    <top>
+        <Pane>
+        <Label prefWidth="300.0" text="Momento Login" alignment="CENTER" styleClass="heading1"></Label>
+        </Pane>
+
+    </top>
+
+<left>
+<Pane prefWidth="50.0"></Pane>
+</left>
+<right>
+<Pane prefWidth="50.0"></Pane>
+</right>
+
+
+    <center>
+
        <HBox>
        <VBox fillWidth="true">
-
-               <Label textAlignment="CENTER" text="Momento Login" style="-fx-font-size: 16" alignment="CENTER"></Label>
-
 
           <VBox.margin>
               <Insets>
                   <left>20</left>
               </Insets>
           </VBox.margin>
-          <VBox>
-              <Label text="Login Name">
+          <VBox styleClass="padding_top_30">
+              <Label text="Login Name" styleClass="heading2">
               </Label>
-              <TextField fx:id="loginField" promptText="login">
+              <TextField fx:id="loginField" promptText="login" prefWidth="200.0">
 
               </TextField>
           </VBox>
-          <VBox>
-              <Label text="Password">
+          <VBox styleClass="padding_top_30">
+              <Label text="Password" styleClass="heading2">
 
               </Label>
-              <PasswordField fx:id="passField" promptText="******">
+              <PasswordField fx:id="passField" promptText="******" prefWidth="200.0">
 
               </PasswordField>
           </VBox>
-           <HBox>
-               <Button text="Přihlásit" onMouseClicked="#tryLogin"/>
-               <Button text="Registrovat" onMouseClicked="#tryRegister"/>
+           <HBox spacing="20.0" styleClass="padding_top_10">
+               <Button text="Přihlásit se" onMouseClicked="#tryLogin" alignment="BOTTOM_LEFT" textAlignment="CENTER"/>
+               <Button text="Registrovat" onMouseClicked="#tryRegister" alignment="BOTTOM_RIGHT" textAlignment="CENTER" />
            </HBox>
            <Label fx:id="errorLogin" styleClass="error">
 
            </Label>
       </VBox>
        </HBox>
-   </children>
-</Pane>
+    </center>
+
+</BorderPane>

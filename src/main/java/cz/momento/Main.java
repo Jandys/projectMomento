@@ -24,6 +24,7 @@ public class Main extends Application {
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
 
         ControllerLogin controller = loader.getController();
         controller.setStage(primaryStage);
@@ -45,14 +46,17 @@ public class Main extends Application {
         Stage stage = new Stage();
         stage.setAlwaysOnTop(true);
         stage.setFullScreen(false);
+        stage.setResizable(false);
+
         FXMLLoader loader = new FXMLLoader();
         InputStream stream = getClass().getClassLoader().getResourceAsStream("register.fxml");
         Parent root = loader.load(stream);
 
         Scene scene = new Scene(root);
-        stage.setScene(scene);
         ControllerRegister controller = loader.getController();
         controller.setStage(stage);
+        stage.setScene(scene);
+
         stage.show();
     }
 
