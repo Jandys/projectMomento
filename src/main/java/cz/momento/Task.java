@@ -1,14 +1,14 @@
 package cz.momento;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Task {
-    LocalDate timeFrom;
-    LocalDate timeTo;
+    LocalDateTime timeFrom;
+    LocalDateTime timeTo;
     int priority;
     String description;
 
-    public Task(LocalDate timeFrom, LocalDate timeTo, int priority) {
+    public Task(LocalDateTime timeFrom, LocalDateTime timeTo, int priority) {
         this.timeFrom = timeFrom;
         this.timeTo = timeTo;
         this.priority = priority;
@@ -18,11 +18,11 @@ public class Task {
         this.description = description;
     }
 
-    public LocalDate getTimeFrom() {
+    public LocalDateTime getTimeFrom() {
         return timeFrom;
     }
 
-    public LocalDate getTimeTo() {
+    public LocalDateTime getTimeTo() {
         return timeTo;
     }
 

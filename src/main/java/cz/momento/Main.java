@@ -1,5 +1,6 @@
 package cz.momento;
 
+import cz.momento.controllers.ControllerCalendar;
 import cz.momento.controllers.ControllerLogin;
 import cz.momento.controllers.ControllerRegister;
 import javafx.application.Application;
@@ -60,5 +61,20 @@ public class Main extends Application {
         stage.show();
     }
 
+    public void calendar() throws Exception{
+        Stage stage = new Stage();
+        stage.setFullScreen(false);
+        stage.setResizable(true);
 
+        FXMLLoader loader = new FXMLLoader();
+        InputStream stream = getClass().getClassLoader().getResourceAsStream("calendar.fxml");
+        Parent root = loader.load(stream);
+
+        Scene scene = new Scene(root);
+        ControllerCalendar controller = loader.getController();
+        controller.setStage(stage);
+        stage.setScene(scene);
+
+        stage.show();
+    }
 }
