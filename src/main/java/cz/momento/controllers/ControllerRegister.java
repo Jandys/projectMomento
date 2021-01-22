@@ -7,6 +7,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import java.sql.SQLException;
 
 public class ControllerRegister {
 
@@ -61,7 +62,7 @@ public class ControllerRegister {
      * It checks if everytihng is alright otherwise it
      * Writes an error into errorRegister label
      */
-    public void tryProcessRegister() {
+    public void tryProcessRegister() throws SQLException {
         DatabaseHandeler dh = null;
         String cryptedLogin = "";
         String hashPass = "";
