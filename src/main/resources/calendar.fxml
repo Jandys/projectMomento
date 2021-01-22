@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.momento.controllers.ControllerCalendar">
+   <MenuBar fx:id="menuBar">
+     <menus>
+       <Menu mnemonicParsing="false" text="User">
+         <items>
+             <MenuItem mnemonicParsing="false" text="Register" onAction="#RegisterUser"/>
+         </items>
+       </Menu>
+       <Menu mnemonicParsing="false" text="Options">
+         <items>
+           <MenuItem mnemonicParsing="false" text="Close" />
+         </items>
+       </Menu>
+     </menus>
+   </MenuBar>
+
+   <GridPane vgap="40" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="25">
+        <columnConstraints>
+            <ColumnConstraints />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+
+        <GridPane fx:id="gridCalendar" hgap="20" vgap="20" GridPane.rowIndex="0" />
+
+        <VBox alignment="BOTTOM_CENTER" GridPane.rowIndex="1">
+            <DatePicker fx:id="datePicker" editable="false" onAction="#pickDate" />
+            <Label fx:id="labelDate">
+            </Label>
+        </VBox>
+   </GridPane>
+</AnchorPane>
