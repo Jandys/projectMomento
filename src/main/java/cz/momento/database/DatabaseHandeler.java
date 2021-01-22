@@ -13,10 +13,12 @@ public class DatabaseHandeler {
     /**
      * Method that connects to oracle database.
      */
-    public void connect(){
+    public void connect() throws SQLException {
         String dbURL = "jdbc:oracle:thin:@kit-oracle.vse.cz:1521:ora9";
         String us = "janj40";
         String ps = "jakub";
+        DriverManager.registerDriver (new oracle.jdbc.driver.OracleDriver());
+
         try{
             this.conn = DriverManager.getConnection(dbURL,us,ps);
         } catch (SQLException throwables) {
