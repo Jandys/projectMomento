@@ -5,16 +5,12 @@ import cz.momento.Main;
 import cz.momento.Task;
 import cz.momento.User;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
@@ -74,7 +70,7 @@ public class ControllerCalendar {
         int rowIndex = 1;
         for (Object object: group.getUserList()) {
             User user = User.class.cast(object);
-            gridCalendar.add(new Label(user.getName()), 0, rowIndex);
+            gridCalendar.add(new Label(user.getFirstName() + " " + user.getLastName()), 0, rowIndex);
             rowIndex++;
         }
         updateHours(group);
@@ -114,22 +110,5 @@ public class ControllerCalendar {
         }catch (Exception e){
             e.printStackTrace();
         }
-    }
-
-    public void pickUser(ActionEvent actionEvent) throws Exception{
-        Stage stage = new Stage();
-        stage.setFullScreen(false);
-        stage.setResizable(true);
-
-        FXMLLoader loader = new FXMLLoader();
-        InputStream stream = getClass().getClassLoader().getResourceAsStream("calendar.fxml");
-        Parent root = loader.load(stream);
-
-        Scene scene = new Scene(root);
-        ControllerCalendar controller = loader.getController();
-        controller.setStage(stage);
-        stage.setScene(scene);
-
-        stage.show();
     }
 }

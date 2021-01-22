@@ -1,9 +1,11 @@
 package cz.momento;
 
+import java.util.ArrayList;
+
 public class User {
     private String firstName;
     private String lastName;
-
+    ArrayList<Task> tasks;
 
     public User(String firstName, String lastName) {
         this.firstName = firstName;
@@ -27,4 +29,7 @@ public class User {
         return lastName;
     }
 
+    public ArrayList<Task> getTasks() {
+        return tasks;
+    }
 }
