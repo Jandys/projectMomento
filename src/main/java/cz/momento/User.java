@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class User {
     private String firstName;
     private String lastName;
-    ArrayList<Task> tasks;
+    ArrayList<Task> tasks = new ArrayList<>();
 
     public User(String firstName, String lastName) {
         this.firstName = firstName;
@@ -31,5 +31,9 @@ public class User {
 
     public ArrayList<Task> getTasks() {
         return tasks;
+    }
+
+    public void addTask(Task task) {
+        tasks.add(task);
     }
 }

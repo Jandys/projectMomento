@@ -7,7 +7,7 @@ public class Group {
     private String desc;
     ArrayList<User> userList = new ArrayList<>();
 
-    public ArrayList getUserList(){
+    public ArrayList<User> getUserList(){
         return this.userList;
     }
     public boolean addUserToGroup(User user){
