@@ -207,6 +207,43 @@ public class DatabaseHandeler {
 
 
     /**
+     * Method that can delete user and table that is assosiated with this uer
+     * @param cryptedLogin is a string of a crypted Login
+     * @param hashPass is a hashed password
+     * @return returns true method successfully deleted user otherwise returns false
+     */
+
+    public boolean deleteUser(String cryptedLogin, String hashPass){
+        int us_id = -1;
+        String usrtbl = "";
+
+        String sql = "select \"us_id\",\"usrtbl\" from \"login\" where \"login\" like \'" + cryptedLogin + "\' and \"pass\" like \'" + hashPass+"\'";
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()) {
+                us_id = rs.getInt(1);
+                usrtbl = rs.getString(2);
+            }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+                return false;
+        }
+        if(us_id == -1 || usrtbl.isEmpty()){
+            return false;
+        }
+        if(tableDoesExits("\"user_"+us_id+"_"+usrtbl+"\"")){
+            dropUserTable(String.valueOf(us_id),usrtbl);
+            select("delete from \"login\" where \"us_id\" like " + us_id);
+        }
+        else {
+            select("delete from \"login\" where \"us_id\" like " + us_id);
+        }
+        return true;
+    }
+
+
+    /**
      * Method takes inputs and creates new row in database for login
      * @param us_id int of incremented last id in database
      * @param login String of crypted login

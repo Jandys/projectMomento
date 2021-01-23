@@ -76,7 +76,6 @@ public class ControllerLogin {
      */
     public void tryRegister() {
         stage.getScene().setCursor(Cursor.WAIT);
-        System.out.println("TRY REGISTER");
         try {
             Main main = new Main();
             main.register();
