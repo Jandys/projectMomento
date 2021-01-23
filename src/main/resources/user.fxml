@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.261" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.momento.controllers.ControllerUser">
+    <Label text="Vytvoření pracovníka" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER"></Label>
+
+    <Label text="Jméno: " GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.halignment="RIGHT"></Label>
+    <TextField GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.halignment="LEFT" maxWidth="100"></TextField>
+
+    <Label text="Příjmení: " GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.halignment="RIGHT"></Label>
+    <TextField GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.halignment="LEFT" maxWidth="100"></TextField>
+
+    <Label text="Pracovní pozice: " GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.halignment="RIGHT"></Label>
+    <TextField GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.halignment="LEFT" maxWidth="100"></TextField>
+
+    <Label text="Profilový obrázek: " GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.halignment="RIGHT"></Label>
+    <Button fx:id="openFile" text="Procházet" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.halignment="LEFT" maxWidth="100"></Button>
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="SOMETIMES" percentHeight="20.0" />
+        <RowConstraints vgrow="SOMETIMES" percentHeight="20.0" />
+        <RowConstraints vgrow="SOMETIMES" percentHeight="20.0" />
+        <RowConstraints vgrow="SOMETIMES" percentHeight="20.0" />
+        <RowConstraints vgrow="SOMETIMES" percentHeight="20.0" />
+    </rowConstraints>
+</GridPane>
