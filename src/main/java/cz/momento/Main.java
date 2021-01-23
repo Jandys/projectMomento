@@ -18,9 +18,8 @@ public class Main extends Application {
         primaryStage.setFullScreen(false);
         primaryStage.setAlwaysOnTop(true);
 
-
         FXMLLoader loader = new FXMLLoader();
-        InputStream stream = getClass().getClassLoader().getResourceAsStream("login.fxml");
+        InputStream stream = getClass().getClassLoader().getResourceAsStream("task.fxml");
         Parent root = loader.load(stream);
 
         Scene scene = new Scene(root);
