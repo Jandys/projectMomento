@@ -3,6 +3,7 @@ package cz.momento.controllers;
 import cz.momento.Main;
 import cz.momento.database.Crypto;
 import cz.momento.database.DatabaseHandeler;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -20,7 +21,6 @@ public class ControllerLogin {
 
 
     public ControllerLogin(){
-
     }
 
 
@@ -63,8 +63,10 @@ public class ControllerLogin {
                 }
             dh.endConnection();
             }
+        stage.getScene().setCursor(Cursor.HAND);
 
-        }
+
+    }
 
 
     /**
@@ -73,6 +75,7 @@ public class ControllerLogin {
      *
      */
     public void tryRegister() {
+        stage.getScene().setCursor(Cursor.WAIT);
         System.out.println("TRY REGISTER");
         try {
             Main main = new Main();
@@ -81,6 +84,8 @@ public class ControllerLogin {
         }catch (Exception e){
             e.printStackTrace();
         }
+        stage.getScene().setCursor(Cursor.HAND);
+
     }
 
 

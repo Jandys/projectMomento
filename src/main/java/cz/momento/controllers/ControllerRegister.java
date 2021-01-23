@@ -3,6 +3,7 @@ package cz.momento.controllers;
 import cz.momento.Main;
 import cz.momento.database.Crypto;
 import cz.momento.database.DatabaseHandeler;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -65,6 +66,7 @@ public class ControllerRegister {
      * Writes an error into errorRegister label
      */
     public void tryProcessRegister() throws SQLException {
+        stage.getScene().setCursor(Cursor.WAIT);
         DatabaseHandeler dh = null;
         String cryptedLogin = "";
         String hashPass = "";
@@ -113,6 +115,8 @@ public class ControllerRegister {
             }
             dh.endConnection();
         }
+        stage.getScene().setCursor(Cursor.HAND);
+
     }
 
 

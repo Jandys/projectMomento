@@ -49,6 +49,15 @@ public class Main extends Application {
         stage.setFullScreen(false);
         stage.setResizable(false);
 
+        stage.setOnCloseRequest(event -> {
+            try {
+                Stage s2 = new Stage();
+                start(s2);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
         FXMLLoader loader = new FXMLLoader();
         InputStream stream = getClass().getClassLoader().getResourceAsStream("register.fxml");
         Parent root = loader.load(stream);
