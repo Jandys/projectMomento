@@ -6,6 +6,8 @@ import cz.momento.database.DatabaseHandeler;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 
@@ -48,6 +50,9 @@ public class ControllerLogin {
                 if(dh.doesUserExist(cryptedLogin,hashPass)){
                     String usertabl = dh.getUserTableId(cryptedLogin,hashPass);
                     int id = dh.getLoginID(cryptedLogin,hashPass);
+                    Main main = new Main();
+                    main.calendar();
+                    stage.close();
                     System.out.println("user_"+id+"_"+usertabl);
                 }else{
 
@@ -72,6 +77,7 @@ public class ControllerLogin {
         try {
             Main main = new Main();
             main.register();
+            stage.close();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -86,4 +92,14 @@ public class ControllerLogin {
         this.stage = primaryStage;
     }
 
+
+    public void enterReco(KeyEvent keyEvent) {
+        if(keyEvent.getCode() == KeyCode.ENTER) {
+            try {
+                tryLogin();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

@@ -41,7 +41,7 @@
               <Label text="Password" styleClass="heading2">
 
               </Label>
-              <PasswordField fx:id="passField" promptText="******" prefWidth="200.0">
+              <PasswordField fx:id="passField" promptText="******" prefWidth="200.0" onKeyPressed="#enterReco" >
 
               </PasswordField>
           </VBox>

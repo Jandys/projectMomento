@@ -1,5 +1,6 @@
 package cz.momento.controllers;
 
+import cz.momento.Main;
 import cz.momento.database.Crypto;
 import cz.momento.database.DatabaseHandeler;
 import javafx.scene.control.Label;
@@ -7,6 +8,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+
 import java.sql.SQLException;
 
 public class ControllerRegister {
@@ -96,7 +98,13 @@ public class ControllerRegister {
             dh.connect();
             if(dh.noSameLoginExist(cryptedLogin)){
                 if(dh.createNewUser(cryptedLogin,hashPass,nameField.getText(),surnameField.getText())){
-                    closeRegister();
+                    Main m = new Main();
+                    try {
+                        m.start(stage);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                   // closeRegister();
                 }else {
                     errorRegister.setText("Unknown error couldn't create login");
                 }
