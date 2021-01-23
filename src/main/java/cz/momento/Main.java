@@ -1,8 +1,6 @@
 package cz.momento;
 
-import cz.momento.controllers.ControllerCalendar;
-import cz.momento.controllers.ControllerLogin;
-import cz.momento.controllers.ControllerRegister;
+import cz.momento.controllers.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -89,6 +87,44 @@ public class Main extends Application {
 
         Scene scene = new Scene(root);
         ControllerCalendar controller = loader.getController();
+        controller.setStage(stage);
+        stage.setScene(scene);
+
+        stage.show();
+    }
+
+    public void task() throws Exception{
+        Stage stage = new Stage();
+        stage.setFullScreen(false);
+        stage.setResizable(true);
+        stage.getIcons().add(ICON);
+
+
+        FXMLLoader loader = new FXMLLoader();
+        InputStream stream = getClass().getClassLoader().getResourceAsStream("task.fxml");
+        Parent root = loader.load(stream);
+
+        Scene scene = new Scene(root);
+        ControllerTask controller = loader.getController();
+        controller.setStage(stage);
+        stage.setScene(scene);
+
+        stage.show();
+    }
+
+    public void user() throws Exception{
+        Stage stage = new Stage();
+        stage.setFullScreen(false);
+        stage.setResizable(true);
+        stage.getIcons().add(ICON);
+
+
+        FXMLLoader loader = new FXMLLoader();
+        InputStream stream = getClass().getClassLoader().getResourceAsStream("user.fxml");
+        Parent root = loader.load(stream);
+
+        Scene scene = new Scene(root);
+        ControllerUser controller = loader.getController();
         controller.setStage(stage);
         stage.setScene(scene);
 
