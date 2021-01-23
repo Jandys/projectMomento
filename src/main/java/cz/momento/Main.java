@@ -7,17 +7,21 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.InputStream;
 
 public class Main extends Application {
 
+    final Image ICON = new Image("icon.png");
+
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         primaryStage.setFullScreen(false);
         primaryStage.setAlwaysOnTop(true);
-
+        primaryStage.getIcons().add(ICON);
 
         FXMLLoader loader = new FXMLLoader();
         InputStream stream = getClass().getClassLoader().getResourceAsStream("login.fxml");
@@ -48,6 +52,8 @@ public class Main extends Application {
         stage.setAlwaysOnTop(true);
         stage.setFullScreen(false);
         stage.setResizable(false);
+        stage.getIcons().add(ICON);
+
 
         stage.setOnCloseRequest(event -> {
             try {
@@ -74,6 +80,8 @@ public class Main extends Application {
         Stage stage = new Stage();
         stage.setFullScreen(false);
         stage.setResizable(true);
+        stage.getIcons().add(ICON);
+
 
         FXMLLoader loader = new FXMLLoader();
         InputStream stream = getClass().getClassLoader().getResourceAsStream("calendar.fxml");
