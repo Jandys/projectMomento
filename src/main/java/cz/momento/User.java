@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class User {
     private String firstName;
     private String lastName;
+    private String cryptedLogin;
     ArrayList<Task> tasks = new ArrayList<>();
 
     public User(String firstName, String lastName) {
@@ -12,6 +13,12 @@ public class User {
         this.lastName = lastName;
 
     }
+
+    public User() {
+
+    }
+
+
 
     /**
      * Method returns first name of a person
@@ -35,5 +42,21 @@ public class User {
 
     public void addTask(Task task) {
         tasks.add(task);
+    }
+
+    public String getCryptedLogin() {
+        return this.cryptedLogin;
+    }
+
+    public void setCryptedLogin(String cryptedLogin) {
+        this.cryptedLogin = cryptedLogin;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

@@ -74,12 +74,11 @@ public class Main extends Application {
         stage.show();
     }
 
-    public void calendar() throws Exception{
+    public void calendar(String cryptedLogin, String hashPass) throws Exception{
         Stage stage = new Stage();
         stage.setFullScreen(false);
         stage.setResizable(true);
         stage.getIcons().add(ICON);
-
 
         FXMLLoader loader = new FXMLLoader();
         InputStream stream = getClass().getClassLoader().getResourceAsStream("calendar.fxml");
@@ -87,6 +86,7 @@ public class Main extends Application {
 
         Scene scene = new Scene(root);
         ControllerCalendar controller = loader.getController();
+        controller.setLoggedUser(cryptedLogin,hashPass);
         controller.setStage(stage);
         stage.setScene(scene);
 

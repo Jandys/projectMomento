@@ -84,6 +84,65 @@ public class DatabaseHandeler {
         return false;
     }
 
+
+    /**
+     * Method that returns String array of groups associated with user
+     * @param cryptedLogin crypted login duh
+     * @return array of groups
+     */
+    public String getGroup(String cryptedLogin){
+        String sql = "select \"group\" from JANJ40.\"login\" where \"login\" like '"+ cryptedLogin +"'";
+        String groups = null;
+        try {
+            Statement stmt = this.conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                groups = rs.getString(1);
+            }
+            rs.close();
+            stmt.close();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return groups;
+    }
+
+
+    public void clearGroup(String cryptedLogin){
+        String sql = "update \"login\" set \"group\" = null where \"login\" like ?";
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(sql);
+            stmt.setString(1,cryptedLogin);
+            int result = stmt.executeUpdate();
+           // stmt.close();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void editGrop(String whatToAdd, String cryptedLogin){
+        String currentGroup = getGroup(cryptedLogin);
+
+
+        String sql = "update \"login\" set \"group\" = ? where \"login\" like ?";
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(sql);
+            if(currentGroup==null){
+                stmt.setString(1,whatToAdd);
+            }else {
+                stmt.setString(1,currentGroup+","+whatToAdd);
+            }
+            stmt.setString(2,cryptedLogin);
+            int result = stmt.executeUpdate();
+            stmt.close();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     /**
      * Method takes login and password in crypted form and returns id of row in databse with same login and password
      * @param login String as crypted login
@@ -237,6 +296,7 @@ public class DatabaseHandeler {
             select("delete from \"login\" where \"us_id\" like " + us_id);
         }
         else {
+            dropUserTable(String.valueOf(us_id),usrtbl);
             select("delete from \"login\" where \"us_id\" like " + us_id);
         }
         return true;
@@ -297,7 +357,7 @@ public class DatabaseHandeler {
      */
     public boolean createUserTable(String us_id, String usrtbl){
         try {
-            String create = "create table \"user_"+us_id+"_"+usrtbl+"\" (" +
+            String create = "create table \"user_tasks_"+us_id+"_"+usrtbl+"\" (" +
                     "\"task_id\" INTEGER not null," +
                     "\"k_id\" NUMBER(6) not null," +
                     "\"us_id\" NUMBER(6) not null," +
@@ -325,7 +385,7 @@ public class DatabaseHandeler {
      */
     public boolean dropUserTable(String us_id, String usrtbl){
         try {
-            String drop = "drop table \"user_"+us_id+"_"+usrtbl+"\" cascade constraints;";
+            String drop = "drop table \"user_tasks_"+us_id+"_"+usrtbl+"\" cascade constraints;";
             Statement statement = conn.createStatement();
             statement.execute(drop);
         }catch (Exception e){

@@ -2,9 +2,22 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="cz.momento.controllers.ControllerCalendar">
     <MenuBar fx:id="menuBar">
+        <Menu mnemonicParsing="false" text="Task">
+            <MenuItem mnemonicParsing="false" text="Create" onAction="#TaskCreation"/>
+        </Menu>
+
+        <Menu mnemonicParsing="false" text="Group">
+            <Menu text="Choose group" mnemonicParsing="false" fx:id="groupChooser"/>
+
+            <Menu mnemonicParsing="false" text="Edit">
+            <MenuItem mnemonicParsing="false" text="Add Group" onAction="#addGroup"/>
+            <MenuItem mnemonicParsing="false" text="Leave group" onAction="#leaveGroup"/>
+            <MenuItem mnemonicParsing="false" text="Leave all groupes" onAction="#leaveAll"/>
+            </Menu>
+
+        </Menu>
         <Menu mnemonicParsing="false" text="User">
             <MenuItem mnemonicParsing="false" text="Create" onAction="#RegisterUser"/>
         </Menu>

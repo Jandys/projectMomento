@@ -21,6 +21,7 @@ public class ControllerLogin {
 
 
     public ControllerLogin(){
+
     }
 
 
@@ -31,6 +32,7 @@ public class ControllerLogin {
      * @throws Exception
      */
     public void tryLogin() throws Exception {
+        stage.getScene().setCursor(Cursor.WAIT);
         String login = loginField.getText();
         String pass = passField.getText();
 
@@ -48,12 +50,7 @@ public class ControllerLogin {
             try{
                 dh.connect();
                 if(dh.doesUserExist(cryptedLogin,hashPass)){
-                    String usertabl = dh.getUserTableId(cryptedLogin,hashPass);
-                    int id = dh.getLoginID(cryptedLogin,hashPass);
-                    Main main = new Main();
-                    main.calendar();
-                    stage.close();
-                    System.out.println("user_"+id+"_"+usertabl);
+                    processLogin(dh, cryptedLogin, hashPass);
                 }else{
 
                     errorLogin.setText("Wrong username or password.");
@@ -65,6 +62,21 @@ public class ControllerLogin {
             }
         stage.getScene().setCursor(Cursor.HAND);
 
+
+    }
+
+    private void processLogin(DatabaseHandeler dh, String cryptedLogin, String hashPass) {
+        try {
+            String usertabl = dh.getUserTableId(cryptedLogin,hashPass);
+            System.out.println(cryptedLogin);
+            int id = dh.getLoginID(cryptedLogin,hashPass);
+            Main main = new Main();
+            main.calendar(cryptedLogin, hashPass);
+            stage.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -98,6 +110,7 @@ public class ControllerLogin {
 
 
     public void enterReco(KeyEvent keyEvent) {
+        stage.getScene().setCursor(Cursor.WAIT);
         if(keyEvent.getCode() == KeyCode.ENTER) {
             try {
                 tryLogin();

@@ -4,14 +4,14 @@ import cz.momento.Group;
 import cz.momento.Main;
 import cz.momento.Task;
 import cz.momento.User;
+import cz.momento.database.DatabaseHandeler;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.MenuBar;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -24,14 +24,18 @@ import java.util.Locale;
 
 public class ControllerCalendar {
     User user1 = new User("Jakub", "Hosek");
-    Task task1 = new Task(LocalDateTime.of(LocalDate.of(2021,1,22), LocalTime.of(7,30)), LocalDateTime.of(LocalDate.of(2021,1,22), LocalTime.of(15,45)), 2);
+    Task task1 = new Task(LocalDateTime.of(LocalDate.of(2021,1,22), LocalTime.of(7,30)), LocalDateTime.of(LocalDate.of(2021,1,22), LocalTime.of(20,45)), 2);
+
+    private User me;
 
     public DatePicker datePicker;
     public MenuBar menuBar;
     private Stage stage;
     public GridPane gridCalendar;
     public Label labelDate;
+    public Menu groupChooser;
 
+    private Group chosenGroup;
     int minHour;
     int maxHour;
 
@@ -41,6 +45,7 @@ public class ControllerCalendar {
         LocalDate today = LocalDate.now();
         datePicker.setValue(today);
         labelDate.setText(today.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH));
+
 
         update();
     }
@@ -62,6 +67,36 @@ public class ControllerCalendar {
 
     public void update() {
         updateUsers();
+        updateGroupChooser();
+    }
+
+    private void updateGroupChooser() {
+        String groups;
+        try{
+            DatabaseHandeler dh = new DatabaseHandeler();
+            dh.connect();
+            if(dh.getGroup(me.getCryptedLogin()) == null){
+                groups = "";
+            }else {
+                groups = dh.getGroup(me.getCryptedLogin());
+            }
+            String groupsSplitted[] = groups.split(",");
+            for(String s : groupsSplitted){
+                MenuItem mi = new MenuItem(s);
+                mi.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                       System.out.println(event.getEventType().getName());
+                       //TODO odtud se budou setovat dalsi timeliny podle zvoleny groupy
+                    }
+                });
+                groupChooser.getItems().add(mi);
+            }
+            dh.endConnection();
+        }catch (Exception e ){
+            e.printStackTrace();
+        }
+
     }
 
     private void updateTasks(Group group) {
@@ -149,7 +184,7 @@ public class ControllerCalendar {
     public void RegisterUser(ActionEvent actionEvent) {
         try {
             Main main = new Main();
-            main.register();
+            main.user();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -174,5 +209,40 @@ public class ControllerCalendar {
     private boolean isSelectedDay(Task task) {
         return datePicker.getValue().compareTo(task.getTimeTo().toLocalDate()) >= 0 &&
                 datePicker.getValue().compareTo(task.getTimeFrom().toLocalDate()) <= 0;
+    }
+
+    public void TaskCreation(ActionEvent actionEvent) {
+        try {
+            Main main = new Main();
+            main.task();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void leaveAll(ActionEvent actionEvent) {
+        try {
+            DatabaseHandeler dh = new DatabaseHandeler();
+           // dh.clearGroup();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void addGroup(ActionEvent actionEvent) {
+    }
+
+    public void leaveGroup(ActionEvent actionEvent) {
+    }
+
+    public void setLoggedUser(String cryptedLogin, String hashPass){
+        me = new User();
+        me.setCryptedLogin(cryptedLogin);
+        try{
+            DatabaseHandeler dh = new DatabaseHandeler();
+            //TODO from database to user setter
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
