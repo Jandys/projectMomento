@@ -203,6 +203,29 @@ public class ControllerCalendar {
 
     public void logOutUser(ActionEvent actionEvent) {
 
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Are You Sure?");
+            alert.setHeaderText("Do you want to log out?");
+            alert.setContentText("Are you absolutely sure that you want to log out?\nBy clicking on OK you will be logged out");
+            alert.setResult(ButtonType.CANCEL);
+            alert.showAndWait().ifPresent(buttonType -> {
+                if(buttonType == ButtonType.OK){
+                    try{
+                    Main main = new Main();
+                    main.start(stage);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    alert.close();
+                }
+
+            });
+
+
+
+
     }
 
     public void exitApp(ActionEvent actionEvent) {
