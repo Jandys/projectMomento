@@ -68,7 +68,6 @@ public class ControllerLogin {
     private void processLogin(DatabaseHandeler dh, String cryptedLogin, String hashPass) {
         try {
             String usertabl = dh.getUserTableId(cryptedLogin,hashPass);
-            System.out.println(cryptedLogin);
             int id = dh.getLoginID(cryptedLogin,hashPass);
             Main main = new Main();
             main.calendar(cryptedLogin, hashPass);
@@ -110,9 +109,9 @@ public class ControllerLogin {
 
 
     public void enterReco(KeyEvent keyEvent) {
-        stage.getScene().setCursor(Cursor.WAIT);
         if(keyEvent.getCode() == KeyCode.ENTER) {
             try {
+                stage.getScene().setCursor(Cursor.WAIT);
                 tryLogin();
             } catch (Exception e) {
                 e.printStackTrace();

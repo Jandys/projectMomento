@@ -8,9 +8,14 @@ import cz.momento.database.DatabaseHandeler;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -34,6 +39,7 @@ public class ControllerCalendar {
     public GridPane gridCalendar;
     public Label labelDate;
     public Menu groupChooser;
+
 
     private Group chosenGroup;
     int minHour;
@@ -147,7 +153,9 @@ public class ControllerCalendar {
         gridCalendar.getChildren().clear();
         gridCalendar.setGridLinesVisible(true);
         Group group = new Group();
-        group.addUserToGroup(user1);
+        group.addUserToGroup(me);
+
+        //TODO FILL GROUP FROM CHOSEN GROUP
         int rowIndex = 1;
         for (User user: group.getUserList()) {
             gridCalendar.add(new Label(user.getFirstName() + " " + user.getLastName()), 0, rowIndex);
@@ -223,24 +231,149 @@ public class ControllerCalendar {
     public void leaveAll(ActionEvent actionEvent) {
         try {
             DatabaseHandeler dh = new DatabaseHandeler();
-           // dh.clearGroup();
+            dh.clearGroup(me.getCryptedLogin());
+            update();
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
+    @FXML
     public void addGroup(ActionEvent actionEvent) {
+        Stage stage = new Stage();
+        StackPane root = new StackPane();
+        Label name = new Label("Name of group to add: ");
+        name.setAlignment(Pos.TOP_CENTER);
+        name.setPadding(new Insets(10));
+        name.setStyle("    -fx-font-family: sans-serif;\n" +
+                      "    -fx-font-weight: bold italic;\n" +
+                      "    -fx-font-size: 19px;");
+        TextField txtF = new TextField();
+        txtF.promptTextProperty().set("name of the group");
+        txtF.setAlignment(Pos.CENTER);
+        txtF.setPadding(new Insets(10));
+        Button btn = new Button();
+        btn.setText("Add to groups");
+        btn.setAlignment(Pos.BOTTOM_CENTER);
+        btn.setPadding(new Insets(10));
+        btn.setStyle("-fx-font-family: sans-serif;\n" +
+                "    -fx-font-size: 14px;");
+        btn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try{
+                    stage.getScene().setCursor(Cursor.WAIT);
+                    DatabaseHandeler dh = new DatabaseHandeler();
+                    dh.connect();
+                    dh.editGrop(txtF.getText(),me.getCryptedLogin());
+                    dh.endConnection();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                stage.close();
+            }
+        });
+        VBox box = new VBox();
+        HBox hbox2 = new HBox();
+        hbox2.setAlignment(Pos.CENTER);
+        hbox2.getChildren().add(name);
+        box.getChildren().add(hbox2);
+        box.getChildren().add(txtF);
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER);
+        hBox.getChildren().add(btn);
+        box.getChildren().add(hBox);
+
+        root.getChildren().add(box);
+
+
+        root.setStyle("-fx-background-color: linear-gradient(from 25px 25px to 30px 30px, reflect, #d4dbff 50%, #afb7c8 60%)");
+
+        Scene addGroup = new Scene(root,300,130);
+        stage.getIcons().add( new Image("icon.png"));
+        stage.setResizable(false);
+
+
+
+        stage.setScene(addGroup);
+        stage.show();
     }
 
     public void leaveGroup(ActionEvent actionEvent) {
+        Stage stage = new Stage();
+        StackPane root = new StackPane();
+        Label name = new Label("Click on group you want to leave: ");
+        name.setAlignment(Pos.TOP_CENTER);
+        name.setPadding(new Insets(10));
+        name.setStyle("    -fx-font-family: sans-serif;\n" +
+                "    -fx-font-weight: bold italic;\n" +
+                "    -fx-font-size: 19px;");
+
+        ComboBox<String> comboBox = new ComboBox<>();
+        try {
+            DatabaseHandeler dh = new DatabaseHandeler();
+            dh.connect();
+            String groups = dh.getGroup(me.getCryptedLogin());
+            comboBox.getItems().addAll(groups.split(","));
+
+
+            dh.endConnection();
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        Button btn = new Button();
+        btn.setText("Leave selected Group");
+        btn.setAlignment(Pos.BOTTOM_CENTER);
+        btn.setPadding(new Insets(10));
+        btn.setStyle("-fx-font-family: sans-serif;\n" +
+                "    -fx-font-size: 14px;");
+        btn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                //TODO remove group from users group
+            }
+        });
+
+
+
+
+
+
+        VBox box = new VBox();
+        HBox hbox2 = new HBox();
+
+        hbox2.setAlignment(Pos.CENTER);
+        hbox2.getChildren().add(name);
+        box.getChildren().add(hbox2);
+        box.getChildren().add(comboBox);
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER);
+        hBox.getChildren().add(btn);
+
+        box.getChildren().add(hBox);
+
+        root.getChildren().add(box);
+
+
+        root.setStyle("-fx-background-color: linear-gradient(from 25px 25px to 30px 30px, reflect, #d4dbff 50%, #afb7c8 60%)");
+
+        Scene addGroup = new Scene(root);
+        stage.getIcons().add( new Image("icon.png"));
+        stage.setResizable(false);
+
+
+
+        stage.setScene(addGroup);
+        stage.show();
     }
 
     public void setLoggedUser(String cryptedLogin, String hashPass){
-        me = new User();
-        me.setCryptedLogin(cryptedLogin);
         try{
             DatabaseHandeler dh = new DatabaseHandeler();
-            //TODO from database to user setter
+            me = dh.setLoggedUser(cryptedLogin,hashPass);
         }catch (Exception e){
             e.printStackTrace();
         }

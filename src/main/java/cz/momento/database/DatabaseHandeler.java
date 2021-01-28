@@ -1,5 +1,7 @@
 package cz.momento.database;
 
+import cz.momento.User;
+
 import java.sql.*;
 
 public class DatabaseHandeler {
@@ -425,6 +427,24 @@ public class DatabaseHandeler {
     }
 
 
-
-
+    public User setLoggedUser(String cryptedLogin, String hashPass) {
+        User loggedUser = new User();
+        try {
+            connect();
+            String sql = "select \"us_id\",\"login\",\"usrtbl\",\"name\",\"surname\" from \"login\" where \"login\" like \'" + cryptedLogin + "\' and \"pass\" like \'" + hashPass+"\'";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()) {
+            loggedUser.setId((short)rs.getInt(1));
+            loggedUser.setCryptedLogin(rs.getString(2));
+            loggedUser.setUsrtbl(rs.getString(3));
+            loggedUser.setFirstName(rs.getString(4));
+            loggedUser.setLastName(rs.getString(5));
+            }
+            endConnection();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return loggedUser;
+    }
 }

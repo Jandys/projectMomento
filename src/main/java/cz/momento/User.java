@@ -6,6 +6,9 @@ public class User {
     private String firstName;
     private String lastName;
     private String cryptedLogin;
+    private short id;
+    private String usrtbl;
+
     ArrayList<Task> tasks = new ArrayList<>();
 
     public User(String firstName, String lastName) {
@@ -58,5 +61,21 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public short getId() {
+        return id;
+    }
+
+    public void setId(short id) {
+        this.id = id;
+    }
+
+    public String getUsrtbl() {
+        return usrtbl;
+    }
+
+    public void setUsrtbl(String usrtbl) {
+        this.usrtbl = usrtbl;
     }
 }
