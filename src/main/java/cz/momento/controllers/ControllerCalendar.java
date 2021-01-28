@@ -43,7 +43,7 @@ public class ControllerCalendar {
     public Menu groupChooser;
 
 
-    private Group chosenGroup;
+    private Group chosenGroup = new Group();
     int minHour;
     int maxHour;
 
@@ -74,8 +74,8 @@ public class ControllerCalendar {
     }
 
     public void update() {
-        updateUsers();
         updateGroupChooser();
+        updateUsers();
     }
 
     private void updateGroupChooser() {
@@ -95,8 +95,8 @@ public class ControllerCalendar {
                 mi.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                       System.out.println(event.getEventType().getName());
-                       //TODO odtud se budou setovat dalsi timeliny podle zvoleny groupy
+                       chosenGroup = choseGroupByName(mi.getText());
+                       update();
                     }
                 });
                 groupChooser.getItems().add(mi);
@@ -106,6 +106,18 @@ public class ControllerCalendar {
             e.printStackTrace();
         }
 
+    }
+
+    private Group choseGroupByName(String text) {
+        Group rGroup = new Group();
+        rGroup.setName(text);
+        try {
+            DatabaseHandeler dh = new DatabaseHandeler();
+            rGroup = dh.getUserWithGroup(text);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return rGroup;
     }
 
     private void updateTasks(Group group) {
@@ -155,17 +167,14 @@ public class ControllerCalendar {
     private void updateUsers() {
         gridCalendar.getChildren().clear();
         gridCalendar.setGridLinesVisible(true);
-        Group group = new Group();
-        group.addUserToGroup(me);
-
-        //TODO FILL GROUP FROM CHOSEN GROUP
+        //Group group = new Group();
         int rowIndex = 1;
-        for (User user: group.getUserList()) {
+        for (User user: chosenGroup.getUserList()) {
             gridCalendar.add(new Label(user.getFirstName() + " " + user.getLastName()), 0, rowIndex);
             rowIndex++;
         }
-        updateHours(group);
-        updateTasks(group);
+        updateHours(chosenGroup);
+        updateTasks(chosenGroup);
     }
 
     private int hourMin(Group group) {

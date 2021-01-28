@@ -1,8 +1,13 @@
 package cz.momento.database;
 
+import cz.momento.Group;
+import cz.momento.Task;
 import cz.momento.User;
 
 import java.sql.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class DatabaseHandeler {
 
@@ -446,5 +451,55 @@ public class DatabaseHandeler {
             e.printStackTrace();
         }
         return loggedUser;
+    }
+
+    public Group getUserWithGroup(String text) {
+        Group rGroup = new Group();
+        try {
+            connect();
+            String sql = "select * from \"login\" where REGEXP_LIKE(\"group\" , '(^|,)("+text+")(,|$)')";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()) {
+                User nUser = new User();
+                nUser.setId((short)rs.getInt(1));
+                nUser.setUsrtbl(rs.getString(4));
+                nUser.setFirstName(rs.getString(6));
+                nUser.setLastName(rs.getString(7));
+                addTasksToUser(nUser);
+                rGroup.addUserToGroup(nUser);
+            }
+            endConnection();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return rGroup;
+
+    }
+
+    private void addTasksToUser(User nUser) {
+        try {
+            String sql = "select * from \"user_tasks_"+nUser.getId()+"_"+nUser.getUsrtbl()+"\" ";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()) {
+                long from = rs.getLong(6);
+                long to = rs.getLong(7);
+                String name = rs.getString(4);
+                String desc = rs.getString(5);
+                int prio = rs.getInt(8);
+                LocalDateTime start = Instant.ofEpochMilli(from).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                LocalDateTime end = Instant.ofEpochMilli(to).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                Task nTask = new Task(start,end,prio);
+                nTask.setDescription(desc);
+                nTask.setName(name);
+                nUser.addTask(nTask);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+        }
+
     }
 }
