@@ -24,6 +24,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 
 
@@ -87,6 +89,7 @@ public class ControllerCalendar {
                 groups = dh.getGroup(me.getCryptedLogin());
             }
             String groupsSplitted[] = groups.split(",");
+            groupChooser.getItems().clear();
             for(String s : groupsSplitted){
                 MenuItem mi = new MenuItem(s);
                 mi.setOnAction(new EventHandler<ActionEvent>() {
@@ -231,7 +234,9 @@ public class ControllerCalendar {
     public void leaveAll(ActionEvent actionEvent) {
         try {
             DatabaseHandeler dh = new DatabaseHandeler();
+            dh.connect();
             dh.clearGroup(me.getCryptedLogin());
+            dh.endConnection();
             update();
         }catch (Exception e){
             e.printStackTrace();
@@ -267,6 +272,7 @@ public class ControllerCalendar {
                     dh.connect();
                     dh.editGrop(txtF.getText(),me.getCryptedLogin());
                     dh.endConnection();
+                    update();
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -333,7 +339,25 @@ public class ControllerCalendar {
         btn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                //TODO remove group from users group
+                String selection = comboBox.getSelectionModel().getSelectedItem();
+                try {
+                    DatabaseHandeler dh = new DatabaseHandeler();
+                    dh.connect();
+                    String[] separatedGroups = dh.getGroup(me.getCryptedLogin()).split(",");
+                    ArrayList<String> ars = new ArrayList<>();
+                    ars.addAll(Arrays.asList(separatedGroups));
+                    ars.remove(selection);
+                    dh.clearGroup(me.getCryptedLogin());
+                    for(String s : ars){
+                        dh.editGrop(s,me.getCryptedLogin());
+                    }
+                    dh.endConnection();
+                    stage.close();
+                    update();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
             }
         });
 
