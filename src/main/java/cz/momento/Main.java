@@ -13,7 +13,7 @@ import java.io.InputStream;
 public class Main extends Application {
 
     final Image ICON = new Image("icon.png");
-
+    private ControllerCalendar calendarController;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -85,19 +85,22 @@ public class Main extends Application {
         Parent root = loader.load(stream);
 
         Scene scene = new Scene(root);
-        ControllerCalendar controller = loader.getController();
-        controller.setLoggedUser(cryptedLogin,hashPass);
-        controller.setStage(stage);
+        calendarController = loader.getController();
+        calendarController.setLoggedUser(cryptedLogin,hashPass);
+        calendarController.setStage(stage);
         stage.setScene(scene);
 
         stage.show();
     }
 
-    public void task() throws Exception{
+    public void task(Group chosenGroup) throws Exception{
         Stage stage = new Stage();
         stage.setFullScreen(false);
         stage.setResizable(true);
         stage.getIcons().add(ICON);
+        stage.setOnCloseRequest(event -> {
+            updateCalendar();
+        });
 
 
         FXMLLoader loader = new FXMLLoader();
@@ -106,6 +109,7 @@ public class Main extends Application {
 
         Scene scene = new Scene(root);
         ControllerTask controller = loader.getController();
+        controller.setGroup(chosenGroup);
         controller.setStage(stage);
         stage.setScene(scene);
 
@@ -129,5 +133,9 @@ public class Main extends Application {
         stage.setScene(scene);
 
         stage.show();
+    }
+
+    private void updateCalendar(){
+        //calendarController.update();
     }
 }

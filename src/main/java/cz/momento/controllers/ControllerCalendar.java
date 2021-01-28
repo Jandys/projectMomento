@@ -18,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
@@ -48,14 +49,31 @@ public class ControllerCalendar {
     int maxHour;
 
     public void init() {
-        gridCalendar.setGridLinesVisible(true);
+        chosenGroup.addUserToGroup(me);
         user1.addTask(task1);
+        chosenGroup.addUserToGroup(user1);
+
+        gridCalendar.setGridLinesVisible(true);
+
         LocalDate today = LocalDate.now();
         datePicker.setValue(today);
         labelDate.setText(today.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH));
 
 
+        setChosenGroupToTheFirstGroup();
         update();
+    }
+
+    private void setChosenGroupToTheFirstGroup() {
+        try {
+            DatabaseHandeler dh = new DatabaseHandeler();
+            dh.connect();
+            String[] groups = dh.getGroup(me.getCryptedLogin()).split(",");
+            choseGroupByName(groups[0]);
+            dh.endConnection();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -133,11 +151,30 @@ public class ControllerCalendar {
                     Label label = new Label("task");
                     box.getChildren().add(label);
                     box.setAlignment(Pos.CENTER);
-                    box.setBackground(new Background(new BackgroundFill(Color.rgb(125,125,125), CornerRadii.EMPTY, Insets.EMPTY)));
+                    box.setBackground(new Background(new BackgroundFill(getColorByPriority(task.getPriority()), CornerRadii.EMPTY, Insets.EMPTY)));
                     gridCalendar.add(box, columnIndexStart, rowIndex, columnIndexEnd - columnIndexStart, 1);
                 }
             }
             rowIndex++;
+        }
+    }
+
+    private Paint getColorByPriority(int priority) {
+        switch (priority){
+            case 0:
+                return Color.rgb(153,255,255);
+            case 1:
+                return Color.rgb(102,255,102);
+            case 2:
+                return Color.rgb(255,255,51);
+            case 3:
+                return Color.rgb(255,128,0);
+            case 4:
+                return Color.rgb(255,0,0);
+            case 5:
+                return Color.rgb(204,0,0);
+            default:
+                return Color.rgb(125,125,125);
         }
     }
 
@@ -167,7 +204,6 @@ public class ControllerCalendar {
     private void updateUsers() {
         gridCalendar.getChildren().clear();
         gridCalendar.setGridLinesVisible(true);
-        //Group group = new Group();
         int rowIndex = 1;
         for (User user: chosenGroup.getUserList()) {
             gridCalendar.add(new Label(user.getFirstName() + " " + user.getLastName()), 0, rowIndex);
@@ -257,7 +293,8 @@ public class ControllerCalendar {
     public void TaskCreation(ActionEvent actionEvent) {
         try {
             Main main = new Main();
-            main.task();
+            main.task(chosenGroup);
+
         }catch (Exception e){
             e.printStackTrace();
         }

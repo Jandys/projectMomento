@@ -445,6 +445,7 @@ public class DatabaseHandeler {
             loggedUser.setUsrtbl(rs.getString(3));
             loggedUser.setFirstName(rs.getString(4));
             loggedUser.setLastName(rs.getString(5));
+            addTasksToUser(loggedUser);
             }
             endConnection();
         }catch (Exception e){
@@ -500,6 +501,52 @@ public class DatabaseHandeler {
         }
         finally {
         }
+
+    }
+
+    public void creteTask(Task task, User user) {
+        String table = "\"user_tasks_"+user.getId()+"_"+user.getUsrtbl()+"\"";
+        String sql = "insert into "+table+" values(?,0,?,?,?,?,?,?,'doing')";
+        int lastTaskId = getLastTaskID(table);
+        int usID = user.getId();
+        String name = (task.getName()==null)?"task":task.getName();
+        String desc = (task.getDescription()==null)?"desc":task.getDescription();
+        long timeStart = task.getTimeFrom().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long timeEnd = task.getTimeTo().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        int prio = task.getPriority();
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(sql);
+            stmt.setInt(1,lastTaskId);
+            stmt.setInt(2,usID);
+            stmt.setString(3,name);
+            stmt.setString(4,desc);
+            stmt.setLong(5,timeStart);
+            stmt.setLong(6,timeEnd);
+            stmt.setInt(7,prio);
+            stmt.execute();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    private int getLastTaskID(String table) {
+        int returnInt = 0;
+
+        String sql = "select \"task_id\" from (select \"task_id\" from "+table+" order by \"task_id\" DESC) where ROWNUM = 1";
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                returnInt = rs.getInt(1);
+            }
+            rs.close();
+            stmt.close();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return returnInt;
 
     }
 }
