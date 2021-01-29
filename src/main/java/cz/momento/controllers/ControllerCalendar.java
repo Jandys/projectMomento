@@ -23,7 +23,6 @@ import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,10 +30,9 @@ import java.util.Locale;
 
 
 public class ControllerCalendar {
-    User user1 = new User("Jakub", "Hosek");
-    Task task1 = new Task(LocalDateTime.of(LocalDate.of(2021,1,22), LocalTime.of(7,30)), LocalDateTime.of(LocalDate.of(2021,1,22), LocalTime.of(20,45)), 2);
-
     private User me;
+
+
 
     public DatePicker datePicker;
     public MenuBar menuBar;
@@ -50,8 +48,6 @@ public class ControllerCalendar {
 
     public void init() {
         chosenGroup.addUserToGroup(me);
-        user1.addTask(task1);
-        chosenGroup.addUserToGroup(user1);
 
         gridCalendar.setGridLinesVisible(true);
 
@@ -66,11 +62,16 @@ public class ControllerCalendar {
 
     private void setChosenGroupToTheFirstGroup() {
         try {
+            String groups;
             DatabaseHandeler dh = new DatabaseHandeler();
             dh.connect();
-            String[] groups = dh.getGroup(me.getCryptedLogin()).split(",");
-            choseGroupByName(groups[0]);
-            dh.endConnection();
+            if(dh.getGroup(me.getCryptedLogin()) == null){
+                groups = "";
+            }else {
+                groups = dh.getGroup(me.getCryptedLogin());
+            }
+            String groupsSplitted[] = groups.split(",");
+            chosenGroup = choseGroupByName(groupsSplitted[0]);
         }catch (Exception e){
             e.printStackTrace();
         }
