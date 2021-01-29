@@ -5,9 +5,11 @@ import java.time.LocalDateTime;
 public class Task {
     LocalDateTime timeFrom;
     LocalDateTime timeTo;
+    int id;
     int priority;
     String description;
     String name;
+    String status;
 
     public Task(LocalDateTime timeFrom, LocalDateTime timeTo, int priority) {
         this.timeFrom = timeFrom;
@@ -41,5 +43,21 @@ public class Task {
 
     public String getName() {
         return name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

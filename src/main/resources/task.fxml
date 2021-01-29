@@ -3,32 +3,42 @@
 <?import cz.momento.DateTimePicker?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.261" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.momento.controllers.ControllerTask">
-    <Label text="Vytvoření úkolu" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
+<GridPane styleClass="gradientMMNT2" stylesheets="styles.css" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.261" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.momento.controllers.ControllerTask">
+    <Label text="Task Creation" styleClass="heading1" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
 
-    <Label text="Pracovník: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-    <ComboBox fx:id="employee" maxWidth="100" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+    <Label styleClass="taskLabel" text="Task name: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+    <TextField fx:id="taskName" maxWidth="150" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
 
-    <Label text="Čas od: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-    <DateTimePicker fx:id="timeFrom" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
-   <!-- <TextField maxWidth="100" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" /> -->
+    <Label styleClass="taskLabel"  text="Task description: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+    <TextField fx:id="taskDesc" maxWidth="250" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
 
-    <Label text="Čas do: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-    <DateTimePicker fx:id="timeTo" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" />
+
+
+    <Label styleClass="taskLabel"  text="Worker: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+    <ComboBox fx:id="employee" maxWidth="200" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" />
+
+    <Label styleClass="taskLabel"  text="Time From: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+    <DateTimePicker fx:id="timeFrom" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4" />
+    <!-- <TextField maxWidth="100" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" /> -->
+
+    <Label styleClass="taskLabel" text="Time To: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+    <DateTimePicker fx:id="timeTo" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="5"/>
     <!--<TextField maxWidth="100" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" />-->
 
-    <Label text="Priorita: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-    <ComboBox fx:id="priority" maxWidth="100" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4"/>
+    <Label styleClass="taskLabel" text="Priority: " GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+    <ComboBox fx:id="priority" maxWidth="100" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="6"/>
 
-    <Button onMouseClicked="#createNewTask" text="Create Task" maxWidth="100" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="5"></Button>
+    <Button styleClass="heading2" onMouseClicked="#createNewTask" text="Create Task" maxWidth="100" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="7"></Button>
 
-    <Label fx:id="errorMessage" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="6"/>
+    <Label fx:id="errorMessage" styleClass="error" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="8"/>
 
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
-        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="40.0" />
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="60.0" />
     </columnConstraints>
     <rowConstraints>
+        <RowConstraints percentHeight="20.0" vgrow="SOMETIMES" />
+        <RowConstraints percentHeight="20.0" vgrow="SOMETIMES" />
         <RowConstraints percentHeight="20.0" vgrow="SOMETIMES" />
         <RowConstraints percentHeight="20.0" vgrow="SOMETIMES" />
         <RowConstraints percentHeight="20.0" vgrow="SOMETIMES" />

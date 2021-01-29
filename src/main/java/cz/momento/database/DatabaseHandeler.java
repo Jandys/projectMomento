@@ -122,7 +122,7 @@ public class DatabaseHandeler {
             PreparedStatement stmt = this.conn.prepareStatement(sql);
             stmt.setString(1,cryptedLogin);
             int result = stmt.executeUpdate();
-           // stmt.close();
+            // stmt.close();
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -234,7 +234,7 @@ public class DatabaseHandeler {
             int id = getLastUserID() + 1;
             String usrtbl = System.currentTimeMillis()+"";
             if(newLogin(id,login,pass,usrtbl,0,name,surname)){
-              System.out.println("Login created successfully");
+                System.out.println("Login created successfully");
             }
             else {
                 System.out.println("Couldn't create new Login");
@@ -259,7 +259,7 @@ public class DatabaseHandeler {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()){
-                    return false;
+                return false;
             }
             rs.close();
             stmt.close();
@@ -291,20 +291,34 @@ public class DatabaseHandeler {
                 us_id = rs.getInt(1);
                 usrtbl = rs.getString(2);
             }
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-                return false;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return false;
         }
         if(us_id == -1 || usrtbl.isEmpty()){
             return false;
         }
-        if(tableDoesExits("\"user_"+us_id+"_"+usrtbl+"\"")){
-            dropUserTable(String.valueOf(us_id),usrtbl);
-            select("delete from \"login\" where \"us_id\" like " + us_id);
+        if(tableDoesExits("\"user_tasks_"+us_id+"_"+usrtbl+"\"")){
+            try {
+                dropUserTable(String.valueOf(us_id),usrtbl);
+                String sql2 = "delete from \"login\" where \"us_id\" like '" + us_id + "'";
+                Statement stmt = conn.createStatement();
+                stmt.execute(sql2);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
         }
         else {
+            try {
+                dropUserTable(String.valueOf(us_id),usrtbl);
+                String sql2 = "delete from \"login\" where \"us_id\" like '" + us_id + "'";
+                Statement stmt = conn.createStatement();
+                stmt.execute(sql2);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
             dropUserTable(String.valueOf(us_id),usrtbl);
-            select("delete from \"login\" where \"us_id\" like " + us_id);
         }
         return true;
     }
@@ -343,7 +357,7 @@ public class DatabaseHandeler {
     public void newUserTable(String us_id, String usrtbl){
         try {
             if(!dropUserTable(us_id,usrtbl)){
-               System.out.println("Trying to delete table that doesn't exist!");
+                System.out.println("Trying to delete table that doesn't exist!");
             }
             if(createUserTable(us_id,usrtbl)){
                 System.out.println("Successfully created new user table");
@@ -440,12 +454,12 @@ public class DatabaseHandeler {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()) {
-            loggedUser.setId((short)rs.getInt(1));
-            loggedUser.setCryptedLogin(rs.getString(2));
-            loggedUser.setUsrtbl(rs.getString(3));
-            loggedUser.setFirstName(rs.getString(4));
-            loggedUser.setLastName(rs.getString(5));
-            addTasksToUser(loggedUser);
+                loggedUser.setId((short)rs.getInt(1));
+                loggedUser.setCryptedLogin(rs.getString(2));
+                loggedUser.setUsrtbl(rs.getString(3));
+                loggedUser.setFirstName(rs.getString(4));
+                loggedUser.setLastName(rs.getString(5));
+                addTasksToUser(loggedUser);
             }
             endConnection();
         }catch (Exception e){
@@ -484,16 +498,20 @@ public class DatabaseHandeler {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()) {
+                int id = rs.getInt(1);
                 long from = rs.getLong(6);
                 long to = rs.getLong(7);
                 String name = rs.getString(4);
                 String desc = rs.getString(5);
                 int prio = rs.getInt(8);
+                String status = rs.getString(9);
                 LocalDateTime start = Instant.ofEpochMilli(from).atZone(ZoneId.systemDefault()).toLocalDateTime();
                 LocalDateTime end = Instant.ofEpochMilli(to).atZone(ZoneId.systemDefault()).toLocalDateTime();
                 Task nTask = new Task(start,end,prio);
+                nTask.setId(id);
                 nTask.setDescription(desc);
                 nTask.setName(name);
+                nTask.setStatus(status);
                 nUser.addTask(nTask);
             }
         }catch (Exception e){
@@ -506,17 +524,17 @@ public class DatabaseHandeler {
 
     public void creteTask(Task task, User user) {
         String table = "\"user_tasks_"+user.getId()+"_"+user.getUsrtbl()+"\"";
-        String sql = "insert into "+table+" values(?,0,?,?,?,?,?,?,'doing')";
+        String sql = "insert into "+table+" values(?,0,?,?,?,?,?,?,'open')";
         int lastTaskId = getLastTaskID(table);
         int usID = user.getId();
-        String name = (task.getName()==null)?"task":task.getName();
-        String desc = (task.getDescription()==null)?"desc":task.getDescription();
+        String name = (task.getName()==null)?"Task":task.getName();
+        String desc = (task.getDescription()==null)?"No description of task":task.getDescription();
         long timeStart = task.getTimeFrom().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         long timeEnd = task.getTimeTo().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         int prio = task.getPriority();
         try {
             PreparedStatement stmt = this.conn.prepareStatement(sql);
-            stmt.setInt(1,lastTaskId);
+            stmt.setInt(1,lastTaskId+1);
             stmt.setInt(2,usID);
             stmt.setString(3,name);
             stmt.setString(4,desc);
@@ -530,8 +548,24 @@ public class DatabaseHandeler {
         }
     }
 
+
+    public String getUserIDfromUserTable(String usrtbl){
+        String sql = "select \"us_id\" from \"login\" where \"usrtbl\" like '" + usrtbl+"'";
+        try {
+            Statement stmt = this.conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()){
+                return rs.getString(1);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return "";
+    }
+
+
     private int getLastTaskID(String table) {
-        int returnInt = 0;
+        int returnInt = 1;
 
         String sql = "select \"task_id\" from (select \"task_id\" from "+table+" order by \"task_id\" DESC) where ROWNUM = 1";
         try {
@@ -548,5 +582,32 @@ public class DatabaseHandeler {
         }
         return returnInt;
 
+    }
+
+    public void editTask(User user, Task task) {
+        String table ="\"user_tasks_"+user.getId()+"_"+user.getUsrtbl()+"\"";
+        String values = "\"task\" = ?, \"desc\"=?, \"timestart\" = ?, \"timeend\" = ?, \"priority\" = ?, \"status\" = ? where \"task_id\" = ?";
+        String sql = "update "+table+" set " + values;
+        long timeStart = task.getTimeFrom().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long timeEnd = task.getTimeTo().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(sql);
+            stmt.setString(1,task.getName());
+            stmt.setString(2,task.getDescription());
+
+
+            stmt.setLong(3,timeStart);
+            stmt.setLong(4,timeEnd);
+            stmt.setInt(5,task.getPriority());
+            stmt.setString(6,task.getStatus());
+            stmt.setInt(7,task.getId());
+
+
+            stmt.execute();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

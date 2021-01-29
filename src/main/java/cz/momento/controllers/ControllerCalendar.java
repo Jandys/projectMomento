@@ -81,8 +81,8 @@ public class ControllerCalendar {
      * @param stage is a stage
      */
     public void setStage(Stage stage) {
-        init();
         this.stage = stage;
+        init();
     }
 
     public void pickDate(ActionEvent event) {
@@ -94,7 +94,9 @@ public class ControllerCalendar {
     public void update() {
         updateGroupChooser();
         updateUsers();
+
     }
+
 
     private void updateGroupChooser() {
         String groups;
@@ -113,8 +115,8 @@ public class ControllerCalendar {
                 mi.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                       chosenGroup = choseGroupByName(mi.getText());
-                       update();
+                        chosenGroup = choseGroupByName(mi.getText());
+                        update();
                     }
                 });
                 groupChooser.getItems().add(mi);
@@ -148,10 +150,20 @@ public class ControllerCalendar {
                     columnIndexStart = getQuarterIndex(task.getTimeFrom()) + 1;
                     columnIndexEnd = getQuarterIndex(task.getTimeTo()) + 1;
                     VBox box = new VBox();
-                    Label label = new Label("task");
+                    Label label = new Label(task.getName());
+                    label.setTooltip(new Tooltip(task.getStatus().toUpperCase()+": " + task.getName() +":\n   "+task.getDescription()));
                     box.getChildren().add(label);
                     box.setAlignment(Pos.CENTER);
-                    box.setBackground(new Background(new BackgroundFill(getColorByPriority(task.getPriority()), CornerRadii.EMPTY, Insets.EMPTY)));
+                    box.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            if(alertOnTaskClosing(user,task))
+                            {
+
+                            }
+                        }
+                    });
+                    box.setBackground(new Background(new BackgroundFill(getColorByPriority(task.getPriority(),task.getStatus()), CornerRadii.EMPTY, Insets.EMPTY)));
                     gridCalendar.add(box, columnIndexStart, rowIndex, columnIndexEnd - columnIndexStart, 1);
                 }
             }
@@ -159,20 +171,55 @@ public class ControllerCalendar {
         }
     }
 
-    private Paint getColorByPriority(int priority) {
+    private boolean alertOnTaskClosing(User user, Task task) {
+        if(task.getStatus().equals("closed")){
+            return false;
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Closing task "+task.getName());
+            alert.setHeaderText("Do you want to close this task?");
+            alert.setContentText("By clicking on OK status of this task will be changed on *CLOSED*");
+            alert.showAndWait().ifPresent(buttonType -> {
+                if(buttonType == ButtonType.OK) {
+                    task.setStatus("closed");
+                    updateTask(user, task);
+                    update();
+                }
+            });
+        }
+        return true;
+
+    }
+
+    private void updateTask(User user, Task task) {
+        try {
+            DatabaseHandeler dh = new DatabaseHandeler();
+            dh.connect();
+            dh.editTask(user, task);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    private Paint getColorByPriority(int priority,String status) {
+        if(status.equals("closed")){
+            return Color.rgb(200,200,200);
+        }
         switch (priority){
             case 0:
                 return Color.rgb(153,255,255);
             case 1:
-                return Color.rgb(102,255,102);
+                return Color.rgb(48,102,200);
             case 2:
-                return Color.rgb(255,255,51);
+                return Color.rgb(102,255,100);
             case 3:
-                return Color.rgb(255,128,0);
+                return Color.rgb(255,255,30);
             case 4:
-                return Color.rgb(255,0,0);
+                return Color.rgb(255,128,0);
             case 5:
-                return Color.rgb(204,0,0);
+                return Color.rgb(255,0,0);
             default:
                 return Color.rgb(125,125,125);
         }
@@ -248,25 +295,25 @@ public class ControllerCalendar {
 
     public void logOutUser(ActionEvent actionEvent) {
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Are You Sure?");
-            alert.setHeaderText("Do you want to log out?");
-            alert.setContentText("Are you absolutely sure that you want to log out?\nBy clicking on OK you will be logged out");
-            alert.setResult(ButtonType.CANCEL);
-            alert.showAndWait().ifPresent(buttonType -> {
-                if(buttonType == ButtonType.OK){
-                    try{
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Are You Sure?");
+        alert.setHeaderText("Do you want to log out?");
+        alert.setContentText("Are you absolutely sure that you want to log out?\nBy clicking on OK you will be logged out");
+        alert.setResult(ButtonType.CANCEL);
+        alert.showAndWait().ifPresent(buttonType -> {
+            if(buttonType == ButtonType.OK){
+                try{
                     Main main = new Main();
                     main.start(stage);
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
+                } catch (Exception e){
+                    e.printStackTrace();
                 }
-                else {
-                    alert.close();
-                }
+            }
+            else {
+                alert.close();
+            }
 
-            });
+        });
 
 
 
@@ -320,8 +367,8 @@ public class ControllerCalendar {
         name.setAlignment(Pos.TOP_CENTER);
         name.setPadding(new Insets(10));
         name.setStyle("    -fx-font-family: sans-serif;\n" +
-                      "    -fx-font-weight: bold italic;\n" +
-                      "    -fx-font-size: 19px;");
+                "    -fx-font-weight: bold italic;\n" +
+                "    -fx-font-size: 19px;");
         TextField txtF = new TextField();
         txtF.promptTextProperty().set("name of the group");
         txtF.setAlignment(Pos.CENTER);
@@ -436,17 +483,22 @@ public class ControllerCalendar {
 
 
         VBox box = new VBox();
-        HBox hbox2 = new HBox();
-
-        hbox2.setAlignment(Pos.CENTER);
-        hbox2.getChildren().add(name);
-        box.getChildren().add(hbox2);
-        box.getChildren().add(comboBox);
         HBox hBox = new HBox();
+        HBox hBox2 = new HBox();
+        HBox hBox3 = new HBox();
         hBox.setAlignment(Pos.CENTER);
-        hBox.getChildren().add(btn);
+        hBox2.setAlignment(Pos.CENTER);
+        hBox3.setAlignment(Pos.CENTER);
+
+        hBox.getChildren().add(name);
+        hBox2.getChildren().add(comboBox);
+        hBox3.getChildren().add(btn);
 
         box.getChildren().add(hBox);
+        box.getChildren().add(hBox2);
+        box.getChildren().add(hBox3);
+
+
 
         root.getChildren().add(box);
 

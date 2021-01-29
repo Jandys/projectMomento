@@ -8,6 +8,7 @@ import cz.momento.database.DatabaseHandeler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -19,6 +20,10 @@ public class ControllerTask {
     private Group chosenGroup;
     private Stage stage;
 
+    @FXML
+    private TextField taskName;
+    @FXML
+    private TextField taskDesc;
     @FXML
     private Label errorMessage;
     @FXML
@@ -38,9 +43,9 @@ public class ControllerTask {
     }
 
     public void setEmployeeOptions(){
-       for(User u : chosenGroup.getUserList()){
-           employee.getItems().add(u.getFirstName() + " " + u.getLastName());
-       }
+        for(User u : chosenGroup.getUserList()){
+            employee.getItems().add(u.getFirstName() + " " + u.getLastName());
+        }
     }
 
     public void setStage(Stage stage) {
@@ -60,24 +65,26 @@ public class ControllerTask {
 
     public void createNewTask(MouseEvent event) {
         if(employee.getSelectionModel().isEmpty() || timeFrom.getDateTimeValue().toString().isEmpty() || timeTo.getDateTimeValue().toString().isEmpty()){
-            errorMessage.setStyle("-fx-text-fill: RED;\n -fx-font-size: 16px;\n -fx-font-family: sans-serif;\n -fx-text-alignment: left;");
+            errorMessage.setStyle("-fx-text-fill: #ff0000;\n -fx-font-size: 16px;\n -fx-font-family: sans-serif;\n -fx-text-alignment: left;");
             errorMessage.setText("Fill all things that need to be filled");
 
         }else {
-        User user = getChosernUser();
-        LocalDateTime from = timeFrom.getDateTimeValue();
-        LocalDateTime to = timeTo.getDateTimeValue();
-        int prio = priority.getSelectionModel().getSelectedIndex() + 1;
-        System.out.println(prio);
-        Task task = new Task(from,to,prio);
-        try{
-            DatabaseHandeler dh = new DatabaseHandeler();
-            dh.connect();
-            dh.creteTask(task,user);
-            dh.endConnection();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+            User user = getChosernUser();
+            LocalDateTime from = timeFrom.getDateTimeValue();
+            LocalDateTime to = timeTo.getDateTimeValue();
+            int prio = priority.getSelectionModel().getSelectedIndex() + 1;
+            System.out.println(prio);
+            Task task = new Task(from,to,prio);
+            task.setName(taskName.getText());
+            task.setDescription(taskDesc.getText());
+            try{
+                DatabaseHandeler dh = new DatabaseHandeler();
+                dh.connect();
+                dh.creteTask(task,user);
+                dh.endConnection();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             close();
         }
     }

@@ -3,6 +3,11 @@
     -fx-font-size: 30px;
     -fx-text-alignment: right;
 }
+.taskLabel{
+    -fx-font-family: sans-serif;
+    -fx-font-weight: bold italic;
+    -fx-font-size: 19px;
+}
 .error{
     -fx-text-fill: RED;
     -fx-font-size: 16px;
@@ -35,4 +40,7 @@
 }
 .gradientMMNT{
     -fx-background-color: linear-gradient(from 25px 25px to 30px 30px, reflect, #d4dbff 50%, #afb7c8 60%);
+}
+.gradientMMNT2{
+    -fx-background-color: linear-gradient(from 30px 30px to 25px 25px, reflect, #a8f6a8 50%, #9bcda4 60%);
 }
