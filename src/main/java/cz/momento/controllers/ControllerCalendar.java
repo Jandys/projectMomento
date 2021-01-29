@@ -71,7 +71,13 @@ public class ControllerCalendar {
                 groups = dh.getGroup(me.getCryptedLogin());
             }
             String groupsSplitted[] = groups.split(",");
-            chosenGroup = choseGroupByName(groupsSplitted[0]);
+            if(groupsSplitted[0].isEmpty()){
+                Group gr = new Group();
+                gr.addUserToGroup(me);
+                chosenGroup = gr;
+            }else {
+                chosenGroup = choseGroupByName(groupsSplitted[0]);
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -116,7 +122,13 @@ public class ControllerCalendar {
                 mi.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        chosenGroup = choseGroupByName(mi.getText());
+                        if(groupsSplitted[0].isEmpty()){
+                            Group gr = new Group();
+                            gr.addUserToGroup(me);
+                            chosenGroup = gr;
+                        }else {
+                            chosenGroup = choseGroupByName(mi.getText());
+                        }
                         update();
                     }
                 });
