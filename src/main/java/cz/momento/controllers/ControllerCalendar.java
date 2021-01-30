@@ -9,8 +9,10 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -32,8 +34,6 @@ import java.util.Locale;
 public class ControllerCalendar {
     private User me;
 
-
-
     public DatePicker datePicker;
     public MenuBar menuBar;
     private Stage stage;
@@ -41,10 +41,10 @@ public class ControllerCalendar {
     public Label labelDate;
     public Menu groupChooser;
 
-
     private Group chosenGroup = new Group();
     int minHour;
     int maxHour;
+    int maxNameLenght = 0;
 
     public void init() {
         chosenGroup.addUserToGroup(me);
@@ -98,10 +98,20 @@ public class ControllerCalendar {
         update();
     }
 
+    public void updateAfterTaskCreation() {
+        System.out.println(chosenGroup.getName());
+        if(chosenGroup.getName()!= null && !chosenGroup.getName().isEmpty()) {
+            chosenGroup = choseGroupByName(chosenGroup.getName());
+            System.out.println("in if");
+        }
+        System.out.println("out if");
+        update();
+    }
+
     public void update() {
         updateGroupChooser();
         updateUsers();
-
+        gridCalendar.getColumnConstraints().get(0).setMinWidth(maxNameLenght*9);
     }
 
 
@@ -146,7 +156,7 @@ public class ControllerCalendar {
         rGroup.setName(text);
         try {
             DatabaseHandeler dh = new DatabaseHandeler();
-            rGroup = dh.getUserWithGroup(text);
+            rGroup = dh.getUserWithGroup(rGroup);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -253,9 +263,9 @@ public class ControllerCalendar {
             VBox box = new VBox();
             box.getChildren().add(label);
             box.setAlignment(Pos.CENTER);
-//            GridPane.setHalignment(label, HPos.CENTER);
-//            GridPane.setValignment(label, VPos.CENTER);
-//            box.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+            GridPane.setHalignment(label, HPos.CENTER);
+            GridPane.setValignment(label, VPos.CENTER);
+            box.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             gridCalendar.add(box, columnIndex, 0, 4, 1);
             columnIndex += 4;
         }
@@ -266,9 +276,14 @@ public class ControllerCalendar {
         gridCalendar.setGridLinesVisible(true);
         int rowIndex = 1;
         for (User user: chosenGroup.getUserList()) {
-            gridCalendar.add(new Label(user.getFirstName() + " " + user.getLastName()), 0, rowIndex);
+            String userName = user.getFirstName() + " " + user.getLastName();
+            if(maxNameLenght < userName.length()) {
+                maxNameLenght = userName.length();
+            }
+            gridCalendar.add(new Label(userName), 0, rowIndex);
             rowIndex++;
         }
+
         updateHours(chosenGroup);
         updateTasks(chosenGroup);
     }
@@ -352,9 +367,9 @@ public class ControllerCalendar {
 
     public void TaskCreation(ActionEvent actionEvent) {
         try {
-            Main main = new Main();
-            main.task(chosenGroup);
-
+            Main.task(chosenGroup, event -> {
+                updateAfterTaskCreation();
+            });
         }catch (Exception e){
             e.printStackTrace();
         }

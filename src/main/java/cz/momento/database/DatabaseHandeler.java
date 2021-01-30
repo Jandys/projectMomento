@@ -468,11 +468,10 @@ public class DatabaseHandeler {
         return loggedUser;
     }
 
-    public Group getUserWithGroup(String text) {
-        Group rGroup = new Group();
+    public Group getUserWithGroup(Group rGroup) {
         try {
             connect();
-            String sql = "select * from \"login\" where REGEXP_LIKE(\"group\" , '(^|,)("+text+")(,|$)')";
+            String sql = "select * from \"login\" where REGEXP_LIKE(\"group\" , '(^|,)("+rGroup.getName()+")(,|$)')";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()) {

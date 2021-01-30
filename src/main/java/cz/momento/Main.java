@@ -2,17 +2,19 @@ package cz.momento;
 
 import cz.momento.controllers.*;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.InputStream;
 
 public class Main extends Application {
 
-    final Image ICON = new Image("icon.png");
+    final static Image ICON = new Image("icon.png");
     private ControllerCalendar calendarController;
 
     @Override
@@ -93,18 +95,16 @@ public class Main extends Application {
         stage.show();
     }
 
-    public void task(Group chosenGroup) throws Exception{
+    public static void task(Group chosenGroup, EventHandler<WindowEvent> onHidden) throws Exception{
         Stage stage = new Stage();
         stage.setFullScreen(false);
         stage.setResizable(true);
         stage.getIcons().add(ICON);
-        stage.setOnCloseRequest(event -> {
-            updateCalendar();
-        });
+        stage.setOnHidden(onHidden);
 
 
         FXMLLoader loader = new FXMLLoader();
-        InputStream stream = getClass().getClassLoader().getResourceAsStream("task.fxml");
+        InputStream stream = Main.class.getClassLoader().getResourceAsStream("task.fxml");
         Parent root = loader.load(stream);
 
         Scene scene = new Scene(root);
@@ -135,7 +135,4 @@ public class Main extends Application {
         stage.show();
     }
 
-    private void updateCalendar(){
-        //calendarController.update();
-    }
 }
