@@ -17,17 +17,20 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Locale;
 
 
@@ -45,9 +48,11 @@ public class ControllerCalendar {
     int minHour;
     int maxHour;
     int maxNameLenght = 0;
+    private ContextMenu menu;
 
     public void init() {
         chosenGroup.addUserToGroup(me);
+        menu = new ContextMenu();
 
         gridCalendar.setGridLinesVisible(true);
 
@@ -99,12 +104,9 @@ public class ControllerCalendar {
     }
 
     public void updateAfterTaskCreation() {
-        System.out.println(chosenGroup.getName());
         if(chosenGroup.getName()!= null && !chosenGroup.getName().isEmpty()) {
             chosenGroup = choseGroupByName(chosenGroup.getName());
-            System.out.println("in if");
         }
-        System.out.println("out if");
         update();
     }
 
@@ -177,15 +179,38 @@ public class ControllerCalendar {
                     label.setTooltip(new Tooltip(task.getStatus().toUpperCase()+": " + task.getName() +":\n   "+task.getDescription()));
                     box.getChildren().add(label);
                     box.setAlignment(Pos.CENTER);
-                    box.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    box.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
                         @Override
-                        public void handle(MouseEvent event) {
-                            if(alertOnTaskClosing(user,task))
-                            {
-
-                            }
+                        public void handle(ContextMenuEvent event) {
+                            menu.hide();
+                            Collection<MenuItem> menuList = new ArrayList<>();
+                            menuList.add(createMenuItem("edit", new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent event) {
+                                    try {
+                                        Main.taskEdit(user, task, event1 -> {
+                                            updateAfterTaskCreation();});
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }));
+                            menuList.add(createMenuItem("close", new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent event) {
+                                    alertOnTaskClosing(user,task);
+                                }
+                            }));
+                            menu.getItems().setAll(menuList);
+                            menu.show(box, event.getScreenX(), event.getScreenY());
                         }
                     });
+//                    box.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//                        @Override
+//                        public void handle(MouseEvent event) {
+//                            alertOnTaskClosing(user,task);
+//                        }
+//                    });
                     box.setBackground(new Background(new BackgroundFill(getColorByPriority(task.getPriority(),task.getStatus()), CornerRadii.EMPTY, Insets.EMPTY)));
                     gridCalendar.add(box, columnIndexStart, rowIndex, columnIndexEnd - columnIndexStart, 1);
                 }
@@ -342,9 +367,6 @@ public class ControllerCalendar {
             }
 
         });
-
-
-
 
     }
 
@@ -550,5 +572,15 @@ public class ControllerCalendar {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Metoda, která vytvoří MenuItem a vrátí ho, pro potřeby věcí nebo postav
+     * @param name příkaz, který se má s danout věcí vykonat
+     */
+    private MenuItem createMenuItem(String name, EventHandler<ActionEvent> onAction) {
+        MenuItem menuItem = new MenuItem(name);
+        menuItem.setOnAction(onAction);
+        return menuItem;
     }
 }

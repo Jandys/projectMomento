@@ -135,4 +135,25 @@ public class Main extends Application {
         stage.show();
     }
 
+    public static void taskEdit(User user, Task task, EventHandler<WindowEvent> onHidden) throws Exception{
+        Stage stage = new Stage();
+        stage.setFullScreen(false);
+        stage.setResizable(true);
+        stage.getIcons().add(ICON);
+        stage.setOnHidden(onHidden);
+
+
+        FXMLLoader loader = new FXMLLoader();
+        InputStream stream = Main.class.getClassLoader().getResourceAsStream("taskEdit.fxml");
+        Parent root = loader.load(stream);
+
+        Scene scene = new Scene(root);
+        ControllerTaskEdit controller = loader.getController();
+        controller.setUser(user);
+        controller.setTask(task);
+        controller.setStage(stage);
+        stage.setScene(scene);
+
+        stage.show();
+    }
 }
