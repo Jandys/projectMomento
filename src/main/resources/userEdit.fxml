@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <GridPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.261" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.momento.controllers.ControllerUserEdit">
-    <Label text="Worker edit" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER"></Label>
+    <Label text="Worker editation" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER"></Label>
 
     <Label text="Name: " GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.halignment="RIGHT"></Label>
     <TextField fx:id="name" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.halignment="LEFT" maxWidth="100"></TextField>
@@ -18,7 +18,9 @@
     <Label text="Profile picture: " GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.halignment="RIGHT"></Label>
     <Button fx:id="openFile" text="Search" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.halignment="LEFT" maxWidth="100"></Button>
 
-    <Button fx:id="createUser" text="Edit" GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER"></Button>
+    <Button fx:id="createUser" text="Update user" GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER"></Button>
+
+    <Label fx:id="errorMessage" styleClass="error" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="6"/>
 
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />

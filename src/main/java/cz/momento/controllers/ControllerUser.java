@@ -15,6 +15,7 @@ public class ControllerUser {
     public TextField position;
     public Button openFile;
     public Button createUser;
+    public Label errorMessage;
     final FileChooser fileChooser = new FileChooser();
     private Desktop desktop = Desktop.getDesktop();
     private Stage stage = null;

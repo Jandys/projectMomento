@@ -1,8 +1,8 @@
 package cz.momento.controllers;
 
+import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +13,9 @@ public class ControllerUserEdit {
     public TextField name;
     public TextField surname;
     public TextField position;
-    public javafx.scene.control.Button openFile;
-    public javafx.scene.control.Button createUser;
+    public Button openFile;
+    public Button createUser;
+    public Label errorMessage;
     final FileChooser fileChooser = new FileChooser();
     private Desktop desktop = Desktop.getDesktop();
     private Stage stage = null;
