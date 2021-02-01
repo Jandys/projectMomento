@@ -66,26 +66,50 @@ public class Task {
         return timeFrom;
     }
 
+    /**
+     * Method returns time when a task ends
+     * @return timeTo
+     */
     public LocalDateTime getTimeTo() {
         return timeTo;
     }
 
+    /**
+     * Method returns tasks priority
+     * @return priority
+     */
     public int getPriority() {
         return priority;
     }
 
+    /**
+     * Method returns tasks description
+     * @return description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Method returns name of the task
+     * @return name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Method returns task status
+     * @return status
+     */
     public String getStatus() {
         return status;
     }
 
+    /**
+     * Method returns task id
+     * @return id
+     */
     public int getId() {
         return id;
     }
