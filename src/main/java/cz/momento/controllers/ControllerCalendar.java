@@ -23,7 +23,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -174,6 +173,7 @@ public class ControllerCalendar {
                 if (isSelectedDay(task)) {
                     columnIndexStart = getQuarterIndex(task.getTimeFrom()) + 1;
                     columnIndexEnd = getQuarterIndex(task.getTimeTo()) + 1;
+                    while(columnIndexEnd - columnIndexStart <1) columnIndexEnd += 1;
                     VBox box = new VBox();
                     Label label = new Label(task.getName());
                     label.setTooltip(new Tooltip(task.getStatus().toUpperCase()+": " + task.getName() +":\n   "+task.getDescription()));
@@ -379,6 +379,7 @@ public class ControllerCalendar {
         result = (time.getHour() - minHour) * 4;
         result += Math.floorDiv(time.getMinute(), 15);
 
+
         return result;
     }
 
@@ -583,4 +584,5 @@ public class ControllerCalendar {
         menuItem.setOnAction(onAction);
         return menuItem;
     }
+
 }
