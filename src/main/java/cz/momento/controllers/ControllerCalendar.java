@@ -32,7 +32,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Locale;
 
-
+/**
+ * Class ControllerCalendar which implements and handle displaying tasks of selected group in selected day
+ */
 public class ControllerCalendar {
     private User me;
 
@@ -49,6 +51,10 @@ public class ControllerCalendar {
     int maxNameLenght = 0;
     private ContextMenu menu;
 
+
+    /**
+     * Method which initialize the graphic interface and set the default values
+     */
     public void init() {
         chosenGroup.addUserToGroup(me);
         menu = new ContextMenu();
@@ -64,6 +70,9 @@ public class ControllerCalendar {
         update();
     }
 
+    /**
+     * Method which initialize first group as chosen
+     */
     private void setChosenGroupToTheFirstGroup() {
         try {
             String groups;
@@ -80,7 +89,7 @@ public class ControllerCalendar {
                 gr.addUserToGroup(me);
                 chosenGroup = gr;
             }else {
-                chosenGroup = choseGroupByName(groupsSplitted[0]);
+                chosenGroup = chooseGroupByName(groupsSplitted[0]);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -96,26 +105,38 @@ public class ControllerCalendar {
         init();
     }
 
+    /**
+     * Method which handle date picking and overwriting shown day of week
+     * @param event event for recognizing the action
+     */
     public void pickDate(ActionEvent event) {
         LocalDate date = datePicker.getValue();
         labelDate.setText(date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH));
         update();
     }
 
+    /**
+     * Method which is called after creation of task for update of calendar
+     */
     public void updateAfterTaskCreation() {
         if(chosenGroup.getName()!= null && !chosenGroup.getName().isEmpty()) {
-            chosenGroup = choseGroupByName(chosenGroup.getName());
+            chosenGroup = chooseGroupByName(chosenGroup.getName());
         }
         update();
     }
 
+    /**
+     * Method which updates the contents of graphical display
+     */
     public void update() {
         updateGroupChooser();
         updateUsers();
         gridCalendar.getColumnConstraints().get(0).setMinWidth(maxNameLenght*9);
     }
 
-
+    /**
+     * Method which updates list of groups that the user is in
+     */
     private void updateGroupChooser() {
         String groups;
         try{
@@ -138,7 +159,7 @@ public class ControllerCalendar {
                             gr.addUserToGroup(me);
                             chosenGroup = gr;
                         }else {
-                            chosenGroup = choseGroupByName(mi.getText());
+                            chosenGroup = chooseGroupByName(mi.getText());
                         }
                         update();
                     }
@@ -152,7 +173,12 @@ public class ControllerCalendar {
 
     }
 
-    private Group choseGroupByName(String text) {
+    /**
+     * Method which choose group by its name
+     * @param text name of chosen group
+     * @return Group
+     */
+    private Group chooseGroupByName(String text) {
         Group rGroup = new Group();
         rGroup.setName(text);
         try {
@@ -164,6 +190,10 @@ public class ControllerCalendar {
         return rGroup;
     }
 
+    /**
+     * Method which handle display of tasks
+     * @param group group from which the tasks should be displayed
+     */
     private void updateTasks(Group group) {
         int rowIndex = 1;
         int columnIndexStart;
@@ -205,12 +235,6 @@ public class ControllerCalendar {
                             menu.show(box, event.getScreenX(), event.getScreenY());
                         }
                     });
-//                    box.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//                        @Override
-//                        public void handle(MouseEvent event) {
-//                            alertOnTaskClosing(user,task);
-//                        }
-//                    });
                     box.setBackground(new Background(new BackgroundFill(getColorByPriority(task.getPriority(),task.getStatus()), CornerRadii.EMPTY, Insets.EMPTY)));
                     gridCalendar.add(box, columnIndexStart, rowIndex, columnIndexEnd - columnIndexStart, 1);
                 }
@@ -219,6 +243,12 @@ public class ControllerCalendar {
         }
     }
 
+    /**
+     * Method which change the status of task from opened to closed through alert if the task is opened
+     * @param task task which should be altered
+     * @param user user whose task it should be
+     * @return boolean
+     */
     private boolean alertOnTaskClosing(User user, Task task) {
         if(task.getStatus().equals("closed")){
             return false;
@@ -240,6 +270,11 @@ public class ControllerCalendar {
 
     }
 
+    /**
+     * Method which update task on database server
+     * @param task task which should be altered
+     * @param user user whose task it should be
+     */
     private void updateTask(User user, Task task) {
         try {
             DatabaseHandeler dh = new DatabaseHandeler();
@@ -251,6 +286,11 @@ public class ControllerCalendar {
 
     }
 
+    /**
+     * Method which set color by priority
+     * @param priority priority which task have
+     * @param status status which task have
+     */
     private Paint getColorByPriority(int priority,String status) {
         if(status.equals("closed")){
             return Color.rgb(200,200,200);
@@ -273,6 +313,10 @@ public class ControllerCalendar {
         }
     }
 
+    /**
+     * Method which update graphic display of range of hours
+     * @param group group which is selected
+     */
     private void updateHours(Group group) {
         minHour = hourMin(group);
         maxHour = hourMax(group);
@@ -296,6 +340,9 @@ public class ControllerCalendar {
         }
     }
 
+    /**
+     * Method which update users who are be displayed
+     */
     private void updateUsers() {
         gridCalendar.getChildren().clear();
         gridCalendar.setGridLinesVisible(true);
@@ -313,6 +360,11 @@ public class ControllerCalendar {
         updateTasks(chosenGroup);
     }
 
+    /**
+     * Method which finds out minimum hour that needs to be displayed
+     * @param group group which is chosen
+     * @return int
+     */
     private int hourMin(Group group) {
         int hour = 8;
         for (User user: group.getUserList()) {
@@ -325,6 +377,11 @@ public class ControllerCalendar {
         return hour;
     }
 
+    /**
+     * Method which finds out maximum hour that needs to be displayed
+     * @param group group which is chosen
+     * @return int
+     */
     private int hourMax(Group group) {
         int hour = 13;
         for (User user: group.getUserList()) {
@@ -337,15 +394,21 @@ public class ControllerCalendar {
         return hour;
     }
 
-    public void RegisterUser(ActionEvent actionEvent) {
-        try {
-            Main main = new Main();
-            main.user();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+//    /**
+//     *
+//     */
+//    public void RegisterUser(ActionEvent actionEvent) {
+//        try {
+//            Main.user();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//    }
 
+    /**
+     * Method which handle log out process
+     * @param actionEvent event for recognizing the action
+     */
     public void logOutUser(ActionEvent actionEvent) {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -370,10 +433,19 @@ public class ControllerCalendar {
 
     }
 
+    /**
+     * Method which close all windows and exit application
+     * @param actionEvent event for recognizing the action
+     */
     public void exitApp(ActionEvent actionEvent) {
         Platform.exit();
     }
 
+    /**
+     * Method which finds out index of time given in timetable
+     * @param time time which should be calculated
+     * @return int
+     */
     private int getQuarterIndex(LocalDateTime time) {
         int result;
         result = (time.getHour() - minHour) * 4;
@@ -383,11 +455,20 @@ public class ControllerCalendar {
         return result;
     }
 
+    /**
+     * Method which finds out if the task day is same as selected day
+     * @param task task which should be checked
+     * @return boolean
+     */
     private boolean isSelectedDay(Task task) {
         return datePicker.getValue().compareTo(task.getTimeTo().toLocalDate()) >= 0 &&
                 datePicker.getValue().compareTo(task.getTimeFrom().toLocalDate()) <= 0;
     }
 
+    /**
+     * Method which handle the process of creating task
+     * @param actionEvent event for recognizing the action
+     */
     public void TaskCreation(ActionEvent actionEvent) {
         try {
             Main.task(chosenGroup, event -> {
@@ -398,6 +479,10 @@ public class ControllerCalendar {
         }
     }
 
+    /**
+     * Method which handle leave of all groups
+     * @param actionEvent event for recognizing the action
+     */
     public void leaveAll(ActionEvent actionEvent) {
         try {
             DatabaseHandeler dh = new DatabaseHandeler();
@@ -410,6 +495,10 @@ public class ControllerCalendar {
         }
     }
 
+    /**
+     * Method which handle display and addition user to group
+     * @param actionEvent event for recognizing the action
+     */
     @FXML
     public void addGroup(ActionEvent actionEvent) {
         Stage stage = new Stage();
@@ -459,19 +548,20 @@ public class ControllerCalendar {
 
         root.getChildren().add(box);
 
-
         root.setStyle("-fx-background-color: linear-gradient(from 25px 25px to 30px 30px, reflect, #d4dbff 50%, #afb7c8 60%)");
 
         Scene addGroup = new Scene(root,300,130);
         stage.getIcons().add( new Image("icon.png"));
         stage.setResizable(false);
 
-
-
         stage.setScene(addGroup);
         stage.show();
     }
 
+    /**
+     * Method which handle choosing of group and then leaving the group
+     * @param actionEvent event for recognizing the action
+     */
     public void leaveGroup(ActionEvent actionEvent) {
         Stage stage = new Stage();
         StackPane root = new StackPane();
@@ -528,11 +618,6 @@ public class ControllerCalendar {
             }
         });
 
-
-
-
-
-
         VBox box = new VBox();
         HBox hBox = new HBox();
         HBox hBox2 = new HBox();
@@ -549,10 +634,7 @@ public class ControllerCalendar {
         box.getChildren().add(hBox2);
         box.getChildren().add(hBox3);
 
-
-
         root.getChildren().add(box);
-
 
         root.setStyle("-fx-background-color: linear-gradient(from 25px 25px to 30px 30px, reflect, #d4dbff 50%, #afb7c8 60%)");
 
@@ -560,24 +642,29 @@ public class ControllerCalendar {
         stage.getIcons().add( new Image("icon.png"));
         stage.setResizable(false);
 
-
-
         stage.setScene(addGroup);
         stage.show();
     }
 
-    public void setLoggedUser(String cryptedLogin, String hashPass){
+    /**
+     * Method which sets logged user
+     * @param encryptedLogin login name
+     * @param hashPass password
+     */
+    public void setLoggedUser(String encryptedLogin, String hashPass){
         try{
             DatabaseHandeler dh = new DatabaseHandeler();
-            me = dh.setLoggedUser(cryptedLogin,hashPass);
+            me = dh.setLoggedUser(encryptedLogin,hashPass);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
     /**
-     * Metoda, která vytvoří MenuItem a vrátí ho, pro potřeby věcí nebo postav
-     * @param name příkaz, který se má s danout věcí vykonat
+     * Method which create MenuItem and return it.
+     * @param name name of option which should be added to list of options
+     * @param onAction handler of action preformed on MenuItem
+     * @return MenuItem
      */
     private MenuItem createMenuItem(String name, EventHandler<ActionEvent> onAction) {
         MenuItem menuItem = new MenuItem(name);
