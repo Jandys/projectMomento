@@ -37,18 +37,25 @@ public class ControllerTaskEdit {
 
 
     }
-
+    /**
+     * method that fills combobox
+     */
     public void setPriorityOptions(){
         for(int i = 1; i <= 5;i++){
             priority.getItems().add(String.valueOf(i));
         }
     }
-
+    /**
+     * setter for stage
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
         init();
     }
 
+    /**
+     * initialization
+     */
     private void init() {
         setPriorityOptions();
         employee.setText(user.getFirstName() + " " + user.getLastName());
@@ -59,19 +66,26 @@ public class ControllerTaskEdit {
         priority.getSelectionModel().select(task.getPriority() - 1);
     }
 
-
-    public void setGroup(Group chosenGroup) {
-        this.chosenGroup = chosenGroup;
-    }
-
+    /**
+     * setter for task
+     * @param task
+     */
     public void setTask(Task task) {
         this.task = task;
     }
 
+    /**
+     * setter for user
+     * @param user
+     */
     public void setUser(User user) {
         this.user = user;
     }
 
+    /**
+     * Method that updates selected task
+     * @param event
+     */
     public void updateTask(MouseEvent event) {
         if(timeFrom.getDateTimeValue().toString().isEmpty() || timeTo.getDateTimeValue().toString().isEmpty()){
             errorMessage.setStyle("-fx-text-fill: #ff0000;\n -fx-font-size: 16px;\n -fx-font-family: sans-serif;\n -fx-text-alignment: left;");
@@ -99,6 +113,9 @@ public class ControllerTaskEdit {
         }
     }
 
+    /**
+     * closing stage
+     */
     private void close(){
         stage.close();
     }

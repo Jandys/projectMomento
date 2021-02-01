@@ -36,33 +36,48 @@ public class ControllerTask {
 
     }
 
+    /**
+     * method that fills combobox
+     */
     public void setPriorityOptions(){
         for(int i = 1; i <= 5;i++){
             priority.getItems().add(String.valueOf(i));
         }
     }
-
+    /**
+     * method that fills combobox with users
+     */
     public void setEmployeeOptions(){
         for(User u : chosenGroup.getUserList()){
             employee.getItems().add(u.getFirstName() + " " + u.getLastName());
         }
     }
-
+    /**
+     * setter for stage
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
         init();
     }
-
+    /**
+     * initialization
+     */
     private void init() {
         setPriorityOptions();
         setEmployeeOptions();
     }
 
-
+    /**
+     * setter for group
+     */
     public void setGroup(Group chosenGroup) {
         this.chosenGroup = chosenGroup;
     }
 
+    /**
+     * Method that creates new task from user input
+     * @param event
+     */
     public void createNewTask(MouseEvent event) {
         if(employee.getSelectionModel().isEmpty() || timeFrom.getDateTimeValue().toString().isEmpty() || timeTo.getDateTimeValue().toString().isEmpty()){
             errorMessage.setStyle("-fx-text-fill: #ff0000;\n -fx-font-size: 16px;\n -fx-font-family: sans-serif;\n -fx-text-alignment: left;");
@@ -89,6 +104,10 @@ public class ControllerTask {
         }
     }
 
+    /**
+     * Returns user chosen by name in combobox
+     * @return
+     */
     private User getChosernUser() {
         for(User u : chosenGroup.getUserList()){
             if((u.getFirstName() +" "+ u.getLastName()).equals(employee.getSelectionModel().getSelectedItem().toString())){
@@ -98,6 +117,9 @@ public class ControllerTask {
         return new User();
     }
 
+    /**
+     * exit stage
+     */
     private void close(){
         stage.close();
     }
