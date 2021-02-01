@@ -51,17 +51,6 @@ public class DatabaseHandeler {
         return rs;
     }
 
-
-    public boolean executeSQL(String sql){
-        try {
-            Statement statement = conn.createStatement();
-            statement.execute(sql);
-        }catch (Exception e){
-            return false;
-        }
-        return true;
-    }
-
     /**
      * Mehtod takes login and password in and looks through database if there is a account with the same login and password
      * @param login String as crypted login
@@ -115,7 +104,10 @@ public class DatabaseHandeler {
         return groups;
     }
 
-
+    /**
+     * Method sets null group when user has crypted login
+     * @param cryptedLogin
+     */
     public void clearGroup(String cryptedLogin){
         String sql = "update \"login\" set \"group\" = null where \"login\" like ?";
         try {
@@ -129,6 +121,11 @@ public class DatabaseHandeler {
         }
     }
 
+    /**
+     * Method adds group to user
+     * @param whatToAdd
+     * @param cryptedLogin
+     */
     public void editGrop(String whatToAdd, String cryptedLogin){
         String currentGroup = getGroup(cryptedLogin);
 
@@ -415,6 +412,11 @@ public class DatabaseHandeler {
         return true;
     }
 
+    /**
+     * Method returns true if table exists
+     * @param name
+     * @return
+     */
     private boolean tableDoesExits(String name){
         try {
             String sql = "SELECT * FROM " + name;
@@ -445,7 +447,12 @@ public class DatabaseHandeler {
         }
     }
 
-
+    /**
+     * Method sets user by used login
+     * @param cryptedLogin
+     * @param hashPass
+     * @return
+     */
     public User setLoggedUser(String cryptedLogin, String hashPass) {
         User loggedUser = new User();
         try {
@@ -468,6 +475,11 @@ public class DatabaseHandeler {
         return loggedUser;
     }
 
+    /**
+     * Method returns all users in certain group
+     * @param rGroup
+     * @return
+     */
     public Group getUserWithGroup(Group rGroup) {
         try {
             connect();
@@ -491,6 +503,10 @@ public class DatabaseHandeler {
 
     }
 
+    /**
+     * Method adds task to user
+     * @param nUser
+     */
     private void addTasksToUser(User nUser) {
         try {
             String sql = "select * from \"user_tasks_"+nUser.getId()+"_"+nUser.getUsrtbl()+"\" ";
@@ -521,6 +537,11 @@ public class DatabaseHandeler {
 
     }
 
+    /**
+     * Method creates new task
+     * @param task
+     * @param user
+     */
     public void creteTask(Task task, User user) {
         String table = "\"user_tasks_"+user.getId()+"_"+user.getUsrtbl()+"\"";
         String sql = "insert into "+table+" values(?,0,?,?,?,?,?,?,'open')";
@@ -547,22 +568,11 @@ public class DatabaseHandeler {
         }
     }
 
-
-    public String getUserIDfromUserTable(String usrtbl){
-        String sql = "select \"us_id\" from \"login\" where \"usrtbl\" like '" + usrtbl+"'";
-        try {
-            Statement stmt = this.conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()){
-                return rs.getString(1);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return "";
-    }
-
-
+    /**
+     * returns last id of task in certain table
+     * @param table
+     * @return
+     */
     private int getLastTaskID(String table) {
         int returnInt = 1;
 
@@ -583,6 +593,11 @@ public class DatabaseHandeler {
 
     }
 
+    /**
+     * Method edits task
+     * @param user
+     * @param task
+     */
     public void editTask(User user, Task task) {
         String table ="\"user_tasks_"+user.getId()+"_"+user.getUsrtbl()+"\"";
         String values = "\"task\" = ?, \"desc\"=?, \"timestart\" = ?, \"timeend\" = ?, \"priority\" = ?, \"status\" = ? where \"task_id\" = ?";
